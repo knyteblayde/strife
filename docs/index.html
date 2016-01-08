@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Strife Framework documentation</title>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/css/prettify.css">
+    <link rel="stylesheet" href="assets/css/docs.css">
+    <link rel="icon" href="assets/favicon.ico">
+</head>
+<body ng-controller="DocsController">
+
+<div class="header">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target="#collapsible1"> Menu </button>
+            <a href="index.html" class="navbar-brand">
+                <img src="assets/img/spiral-heading.png">
+            </a>
+        </div>
+        <div class="navbar-collapse collapse" id="collapsible1">
+            <ul class="nav navbar-nav navbar-left">
+                <li class='dropdown'><a href="#" data-toggle='dropdown'>Spiral<i class="caret"></i></a>
+                    <ul class='dropdown-menu'>
+                        <li><a href="#">spiral.v1.0</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Fork me on Github</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar">
+    <ul class="list">
+        <li><a ng-class="{'active':docs[0]}" ng-click="changePage(0)" href="#/overview">1. Overview </a></li>
+        <li><a ng-class="{'active':docs[1]}" ng-click="changePage(1)" href="#/installation">2. Installation</a></li>
+        <li><a ng-class="{'active':docs[2]}" ng-click="changePage(2)" href="#/configuration">3. Configuration</a></li>
+        <li><a ng-class="{'active':docs[3]}" ng-click="changePage(3)" href="#/environment">4. Environment</a></li>
+        <li><a ng-class="{'active':docs[4]}" ng-click="changePage(4)" href="#/routing">5. Routing</a></li>
+        <li><a ng-class="{'active':docs[5]}" ng-click="changePage(5)" href="#/controllers">6. Controllers</a></li>
+        <li><a ng-class="{'active':docs[6]}" ng-click="changePage(6)" href="#/views">7. Views</a></li>
+        <li><a ng-class="{'active':docs[7]}" ng-click="changePage(7)" href="#/database">8. Database</a></li>
+        <li><a ng-class="{'active':docs[8]}" ng-click="changePage(8)" href="#/models">9. Models</a></li>
+        <li><a ng-class="{'active':docs[9]}" ng-click="changePage(9)" href="#/querybuilder">10. Query Builder</a></li>
+        <li><a ng-class="{'active':docs[10]}" ng-click="changePage(10)" href="#/migrations">11. Migrations</a></li>
+        <li><a ng-class="{'active':docs[11]}" ng-click="changePage(11)" href="#/formbuilder">12. Form Builder</a></li>
+        <li><a ng-class="{'active':docs[12]}" ng-click="changePage(12)" href="#/requests">13. Requests</a></li>
+        <li><a ng-class="{'active':docs[13]}" ng-click="changePage(13)" href="#/auth">14. Auth</a></li>
+        <li><a ng-class="{'active':docs[14]}" ng-click="changePage(14)" href="#/hash">15. Hash</a></li>
+        <li><a ng-class="{'active':docs[15]}" ng-click="changePage(15)" href="#/commandline">16. Command Line</a></li>
+    </ul>
+</div>
+<div class="container">
+    <div ng-if="docs[0]" class="docs" ng-include="'bin/overview.html'"></div>
+    <div ng-if="docs[1]" class="docs" ng-include="'bin/installation.html'"></div>
+    <div ng-if="docs[2]" class="docs" ng-include="'bin/configuration.html'"></div>
+    <div ng-if="docs[3]" class="docs" ng-include="'bin/environment.html'"></div>
+    <div ng-if="docs[4]" class="docs" ng-include="'bin/routing.html'"></div>
+    <div ng-if="docs[5]" class="docs" ng-include="'bin/controllers.html'"></div>
+    <div ng-if="docs[6]" class="docs" ng-include="'bin/views.html'"></div>
+    <div ng-if="docs[7]" class="docs" ng-include="'bin/database.html'"></div>
+    <div ng-if="docs[8]" class="docs" ng-include="'bin/models.html'"></div>
+    <div ng-if="docs[9]" class="docs" ng-include="'bin/querybuilder.html'"></div>
+    <div ng-if="docs[10]" class="docs" ng-include="'bin/migrations.html'"></div>
+    <div ng-if="docs[11]" class="docs" ng-include="'bin/formbuilder.html'"></div>
+    <div ng-if="docs[12]" class="docs" ng-include="'bin/requests.html'"></div>
+    <div ng-if="docs[13]" class="docs" ng-include="'bin/auth.html'"></div>
+    <div ng-if="docs[14]" class="docs" ng-include="'bin/hash.html'"></div>
+    <div ng-if="docs[15]" class="docs" ng-include="'bin/commandline.html'"></div>
+</div>
+
+<script src="assets/js/angular.min.js"></script>
+<script src="assets/js/angular-animate.js"></script>
+<script src="assets/js/angular-route.js"></script>
+<script src="assets/js/docs.js"></script>
+</body>
+</html>

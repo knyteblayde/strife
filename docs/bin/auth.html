@@ -1,0 +1,17 @@
+<p class="title">Authentication</p>
+
+
+<pre><code style="" class="php"><span class="pun">&lt;?</span><span class="pln">php
+
+</span><span class="kwd">namespace</span><span class="pln"> </span><span class="typ">YourApp</span><span class="pln">\Filters</span><span class="pun">;</span><span class="pln">
+
+</span><span class="kwd">use</span><span class="pln"> </span><span class="typ">Intervention</span><span class="pln">\Image\Image</span><span class="pun">;</span><span class="pln">
+</span><span class="kwd">use</span><span class="pln"> </span><span class="typ">Intervention</span><span class="pln">\Image\Filters\FilterInterface</span><span class="pun">;</span><span class="pln">
+
+</span><span class="kwd">class</span><span class="pln"> </span><span class="typ">MyFilter</span><span class="pln"> </span><span class="kwd">implements</span><span class="pln"> </span><span class="typ">FilterInterface</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> applyFilter</span><span class="pun">(</span><span class="typ">Image</span><span class="pln"> $image</span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> $image</span><span class="pun">-&gt;</span><span class="pln">fit</span><span class="pun">(</span><span class="lit">120</span><span class="pun">,</span><span class="pln"> </span><span class="lit">90</span><span class="pun">)-&gt;</span><span class="pln">greyscale</span><span class="pun">();</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>

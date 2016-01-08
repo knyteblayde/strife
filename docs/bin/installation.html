@@ -1,0 +1,38 @@
+<p class="title">Installation</p>
+
+<p>
+    Installations are always a headache at first if you're <em>not-so-savvy programmer</em>, so to avoid being cursed for a week<br>
+    figuring out how to use a certain tool, we provided three easy options on how to install spiral framework:
+    <br><br>
+    <b>1. First option is to download the package</b><br>
+    head to the <a href="https://knyteblayde.github.io/spiral/downloads">Download</a> page
+    and pick the latest and stable version, extract the contents inside your web accessible directory on your web server or your local development server
+    like <a href="www.apachefriends.com">Xampp</a> for example is usually <code>C:\xampp\htdocs</code> while on <a href="">Wampserver</a> it is inside <code>C:\wamp\var\www</code>.
+
+
+    <br><br>
+
+    <b>2. Second Option is to clone the repository</b><br>
+    Spiral Framework is regularly updated on a repository on Github, you can get the latest build or the lower versions of
+    it by cloning the repository by issuing the command below (assuming you have <a href="#">Git</a> pre-installed on your computer; if not, google for it):
+    <pre><code class="lit">git clone https://github.com/knyteblayde/spiral.git</code></pre>
+
+    <br>
+
+    <b>3. Third and Last option is to use <a href="https://getcompoer.org">composer</a></b><br>
+    <a href="https://getcomposer.com">Composer</a> is a powerful php dependency manager, it intelligently handles the <a href="#">autoloading</a> of your classes and application components. <br>
+    If you have no idea about composer, please make sure to visit <a href="https://getcomposer.org">getcomposer.org</a> on how to get it work.<br><br>
+    We will use composer to pull in Spiral package: <br>
+    <pre><code class="lit">composer require "knyteblayde/spiral" : "~dev-master"</code></pre>
+
+    <br><br>
+
+
+    if you have performed one of the above mentioned methods, you are now able to test whether the framework is up and running by
+    visiting:<code>http://localhost/spiral/public</code> on your web browser, if you do so, you will get a screen like this:
+    <img src="  assets/img/welcome.jpg" class="img-responsive">
+</p>
+
+<a href="#/configuration" class="link" ng-click="docs[1]=false;docs[2]=true">2. Configuration</a>
+
+<br>

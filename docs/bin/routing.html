@@ -1,0 +1,57 @@
+<p class="title">Routing</p>
+
+<h3 class="link">Basic Routing logic</h3>
+<p>
+    Routing is one of the most common thing on MVC frameworks, you assign a route for a specific page, a route for when saving data,
+    or when you want to delete an item and etc.<br><br>
+
+    Spiral's basic routing logic is very simple, for example suppose we want to view all products and our URL might look like this:
+    <pre><code>http://myapp.dev/products/index</code></pre>
+    controllers rely on what is with the URL, to nail it down, what happends in the background is Spiral looks for the first string
+    on the URL after the domain name, in this case, it is <b>products</b>
+    <pre><code><span class="strikeout">http://myapp.dev/</span><b> products </b><span class="strikeout">/index</span></code></pre>
+
+    Spiral then will handle this string, it will look for a class <code>ProductsController</code>
+    ('Products' is our string value from the URL and 'Controller' is automatically append) inside the controllers directory.<br>
+    Now for the second string on the URL is the <b>index</b>
+    <pre><code><span class="strikeout">http://myapp.dev/products/</span><b> index </b></code></pre>
+
+    The string <code>index</code> will then be the method inside the <code>ProductsController</code>
+</p>
+
+<h3 class="link">Spiral's default controller</h3>
+
+<p>
+    inside <code>app/controllers</code> directory, there's a php file called <code>HomeController.php</code> this is the default controller class for handling
+    URLs like <code>http://myapp.dev</code> and <code>http://myapp.dev/home/index</code> it looks like this:
+<code><pre>
+&lt;?php
+
+class HomeController
+{
+    public function index()
+    {
+        return View::render('frontend/index');
+    }
+}
+</pre></code>
+
+    Go and edit the <code>index()</code> method like this:
+    <code><pre>
+&lt;?php
+
+class HomeController
+{
+    public function index()
+    {
+        echo "Hello, world!";
+    }
+}
+</pre></code>
+
+    by visiting <code>http://myapp.dev</code> or <code>http://myapp.dev/home/index</code>
+    it will echo what we have typed inside index method.<br><br>
+    So that's basically it! we will delve in deeper into controllers on the next page.
+</p>
+
+<a href="#/controllers" class="link" ng-click="docs[4]=false;docs[5]=true">6. Controllers</a>

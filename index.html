@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Spiral Framework</title>
+    <link rel="stylesheet" href="docs/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="icon" href="docs/assets/favicon.ico">
+</head>
+<body ng-init="page[0]=true;navigation=true">
+
+<div ng-click="navigation==true ? navigation=false : navigation=true" class="navigation-toggle">☰</div>
+<div ng-class="{'show-nav':!navigation}" class="navigation">
+    <ul class="nav-left">
+        <li><a href="index.html" class="brand"><img class="hidden-xs" src="docs/assets/img/spiral-heading.png"><span class="visible-xs">Home</span></a></li>
+        <li><a href="docs/index.html">Documentation</a></li>
+        <li><a href="https://github.com/knyteblayde">Fork me on Github</a></li>
+    </ul>
+    <ul class="nav-right">
+        <li><a href="https://gitbub.com/knyteblayde/spiralframework">Download</a></li>
+    </ul>
+    <div class="clearfix"></div>
+</div>
+
+<div ng-if="page[0]" class="page">
+    <center>
+        <img src="docs/assets/img/spiral-heading.png" class="spiral-image">
+        <p class="spiral-subheading">A Fast and Lightweight PHP MVC Framework.</p>
+        <img src="img/banner.jpg" class="img-responsive banner">
+    </center>
+
+    <center>
+        <img src="img/caret.png" class="big-caret" ng-click="page[1]=true;page[0]=false">
+    </center>
+</div>
+
+
+<div ng-if="page[1]" class="page">
+    <center>
+        <p class="spiral-heading">Speed, Efficiency, and Smart Framework.</p>
+        <p class="spiral-subheading">
+            <ul class="features">
+                <li>Uses composer for autoloading and as dependency manager. <br></li>
+                <li>Has simple template engine for faster processing of data. <br></li>
+                <li>Has better way of interacting with your database.<br></li>
+                <li>Can handle automated forms and validations.</li>
+            </ul>
+        </p>
+    </center>
+
+    <center>
+        <img src="img/caret.png" class="big-caret" ng-click="page[2]=true;page[1]=false">
+    </center>
+</div>
+
+
+<div ng-if="page[2]" class="page">
+    <center>
+        <p class="spiral-heading">
+            Spiral has handy set of tools for <br>
+            rapid development.
+        </p>
+
+        <ul class='tools'>  
+            <li>Requests</li>
+            <li>Validation</li>
+            <li>Migration</li>
+            <li>Command-Line tool</li>
+            <li>Query Builder</li>
+            <li>Form Builder</li>
+            <li>Schema Builder</li>
+        </ul>
+    </center>
+    <center>
+        <img src="img/caret.png" class="big-caret" ng-click="page[2]=false;page[3]=true">
+    </center>
+</div>
+
+
+<div ng-if="page[3]" class="page">
+    <center>
+        <p class="spiral-heading">Download the latest package</p>
+        <a href="https://gitbub.com/knyteblayde/spiralframework" class="download-jumbo">SPIRAL V1.0.1</a>
+        <br><br>
+        <a href="#" ng-click='page[0]=true;page[3]=false'>&lt;&lt; Home</a>
+    </center>
+</div>
+
+
+<br>
+<center>
+    <div class="footer">
+        <span class="pull-left">&copy; 2015 Jeyz Strife</span>
+        <span class="pull-right">Powered by <a href="http://angularjs.org">AngularJS</a> <img src="img/angular.png"><br></span>
+    </div>
+</center>
+<br>
+
+<script src="docs/assets/js/angular.min.js"></script>
+<script src="docs/assets/js/angular-animate.js"></script>
+<script type="text/javascript">
+    var app = angular.module('app',['ngAnimate']);
+</script>
+</body>
+</html>

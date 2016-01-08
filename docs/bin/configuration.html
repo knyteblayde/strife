@@ -1,0 +1,40 @@
+<p class="title">Configuration</p>
+
+
+
+<h3 class="link">Custom Domain names</h3>
+<p>
+	custom domain names are the way of naming your application like it is actually a live website,<br>
+	for example, in your local development server you are used to be developing on a URL like <code>http://localhost/myproject/index.php</code> but when we use a custom domain name, we can do it like so <code>http://website.dev</code> or <code>http://website.com</code> or any URL that you would want to have for your application. <br>
+	custom domains aren't just to fancify our URL but it also solves the directory issues that is encountered in procedural programming,
+	you'll see the purpose of these configurations later on. but for now, let's proceed.
+</p>
+
+<p>
+	We will start to configure our <code>httpd-vhosts.conf</code> file, 
+	<br>
+
+	for Xampp, navigate to <code>C:\xampp\apache\conf\extra\httpd-vhosts.conf</code> and for Wampserver, <code>C:\wampp\apache\conf\extra\httpd-vhosts.conf</code> (please note that my installation directory might be different to yours)
+	open the file using any text editor, and add this line of code at the end of the file:<br>
+<pre class="prettyprint"><code><span class="kwd">&lt;VirtualHost *:80&gt;</span>
+    DocumentRoot <span class="pun">"C:/xampp/htdocs/spiral/public"</span>
+    ServerName <span class="pun">myapp.dev</span>
+<span class='kwd'>&lt;/VirtualHost&gt;</span></code></pre>
+
+	Notice the <code>"C:/xampp/htdocs/spiral/public"</code>, this should be the directory where you extracted/installed the Spiral Framework. <br>
+	while <code>myapp.dev</code>will be our custom domain name for this purpose, but feel free to change that to whatever you like.<br>
+
+</p>
+Now save and exit, let us now configure <code>hosts</code> file<br>
+Open your Notepad with administrator privilleges(run as administrator) and open
+<code>C:\Windows\system32\drivers\etc\hosts</code>
+and add this line at the end:
+<pre class='prettyprint'>
+<code><span class="pun">127.0.0.1 &nbspmyapp.dev</span></code>
+</pre>
+If you followed all the above steps, you will now be able to visit <code>http://myapp.dev</code> in your web browser.
+<br><br>
+
+<a href="#/environment" class="link" ng-click="docs[2]=false;docs[3]=true">2. Spiral Framework Environment</a>
+
+<br>
