@@ -50,7 +50,7 @@ abstract class View
             extract($_);
         }
 
-        $filename = VIEWS_PATH . preg_replace('/\.php$/', '', ltrim($template, '/')) . self::$postfix;
+        $filename = views_dir() . preg_replace('/\.php$/', '', ltrim($template, '/')) . self::$postfix;
 
         if (!file_exists($filename)) {
             trigger_error("File does not exist '{$filename}'", E_USER_ERROR);
@@ -60,9 +60,6 @@ abstract class View
         $content = preg_replace('/\{\{(.*)\}\}$/', '<?php echo htmlentities($1) ?>', $content);
         $content = preg_replace('/\{\{/', '<?php echo htmlentities($1', $content);
         $content = preg_replace('/\}\}/', ') ?>', $content);
-        $content = preg_replace('/\{\%(.*)\%\}$/', '<?php echo htmlentities($1) ?>', $content);
-        $content = preg_replace('/\{\%/', '<?php echo htmlentities($1', $content);
-        $content = preg_replace('/\%\}/', ') ?>', $content);
         $content = preg_replace('/\{\!(.*)\!\}$/', '<?php echo $1 ?>', $content);
         $content = preg_replace('/\{\!/', '<?php echo $1', $content);
         $content = preg_replace('/\!\}/', ' ?>', $content);
@@ -115,13 +112,13 @@ abstract class View
      */
     public static function get($template)
     {
-        $filename = VIEWS_PATH . $template . self::$postfix;
+        $filename = views_dir() . $template . self::$postfix;
 
         if (!file_exists($filename)) {
             trigger_error("File does not exist '{$filename}'", E_USER_ERROR);
         }
 
-        return include "$filename";
+        return include ("$filename");
     }
 
 }

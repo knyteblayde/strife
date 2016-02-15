@@ -11,7 +11,7 @@ Connection::parameters([
     'hostname' => 'localhost',
     'database' => 'rocketflare',
     'username' => 'root',
-    'password' => 'strife',
+    'password' => '',
     'charset'  => 'utf8',
     'port'     => 3306
 ]);
@@ -20,4 +20,4 @@ Connection::parameters([
 /**
  * Begin Transaction with database
  */
-Connection::initialize(1);
+Connection::initialize();

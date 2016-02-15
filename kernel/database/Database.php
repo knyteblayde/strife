@@ -25,7 +25,7 @@ class Database extends QueryBuilder
      */
     public static function query($query)
     {
-        $stmt = self::$pdo->query($query);
+        $stmt = self::getInstance()->query($query);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
@@ -55,10 +55,12 @@ class Database extends QueryBuilder
     public static function create($database)
     {
         try {
-            return self::$pdo->exec("CREATE DATABASE {$database}");
+            return self::getInstance()->exec("CREATE DATABASE {$database}");
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
+
+        return;
     }
 
 
@@ -72,9 +74,9 @@ class Database extends QueryBuilder
     public static function drop($database)
     {
         try {
-            return self::$pdo->exec("DROP DATABASE {$database}");
+            return self::getInstance()->exec("DROP DATABASE {$database}");
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            return print $e->getMessage();
         }
     }
 }

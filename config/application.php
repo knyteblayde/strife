@@ -13,7 +13,6 @@ define('APP_NAME', 'Strife App');
 
 
 
-
 /**
  * This is an application key that will
  * be used for security purposes.
@@ -22,7 +21,6 @@ define('APP_NAME', 'Strife App');
  * deployment of this system.
  */
 define('APPLICATION_KEY', '9ar4jto6mh5cy7xpyyp59bczar3uac4cl8r1hhg70395zroulf');
-
 
 
 

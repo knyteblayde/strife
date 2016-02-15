@@ -24,11 +24,12 @@ class UsersTableMigration extends Migration
         $this->char('password', 128, 'unique');
         $this->char('email', 128, 'unique');
         $this->varchar('number', 50);
-        $this->varchar('picture', 255);
+        $this->varchar('avatar', 255);
         $this->varchar('role', 20);
         $this->varchar('active', 20);
-        $this->datetime('date_added');
-        $this->varchar('remember_token');
+        $this->varchar('date_added', 50);
+        $this->varchar('time_added', 50);
+        $this->char('remember_token', 32, null, 'null');
     }
 
 

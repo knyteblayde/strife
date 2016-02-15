@@ -2,6 +2,11 @@
 
 use Kernel\Database\Database;
 
+/**
+ * Interface RequestInterface
+ *
+ * @package Kernel
+ */
 interface RequestInterface
 {
     public function __construct($request);
@@ -92,6 +97,19 @@ class Request implements RequestInterface
 
 
     /**
+     * Store current field values
+     * to fields session var and can be accessed thru
+     * fields() method
+     *
+     * @return string
+     */
+    public function retain()
+    {
+        $_SESSION['__FIELDS__'] = $this->request;
+    }
+
+
+    /**
      * Returns a sanitized string
      *
      * @param $string
@@ -114,10 +132,8 @@ class Request implements RequestInterface
     {
         for ($i = 0; $i < count($this->request); $i++) {
             $field = array_keys($this->request);
-
             if (array_key_exists($field[$i], $this->rules)) {
                 $rule = explode('|', $this->rules[$field[$i]]);
-
                 for ($z = 0; $z < count($rule); $z++) {
                     if ($rule[$z] == 'required') {
                         if (strlen($this->request[$field[$i]]) == 0) {
@@ -127,16 +143,13 @@ class Request implements RequestInterface
                     }
                     if (preg_match('/unique/i', $rule[$z])) {
                         $db = new Database;
-
                         $value = $this->request[$field[$i]];
-
-                        for ($p = 0; $p < count($rule); $p++) {
-                            if ($rule[$p] == 'password') {
+                        foreach ($rule as $item) {
+                            if ($item == 'password') {
                                 $value = Hash::encode($value);
                                 break;
                             }
                         }
-
                         if ($db->table(explode(':', $rule[$z])[1])->where($field[$i], $value)->exists()) {
                             $this->errors[$field[$i]] = "{$field[$i]} not available.";
                             break;
@@ -150,12 +163,12 @@ class Request implements RequestInterface
                     }
                     if ($rule[$z] == 'alphanumeric') {
                         if (!preg_match('/[^A-Za-z0-9]/i', $this->request[$field[$i]])) {
-                            $this->errors[$field[$i]] = "Special characters are not allowed.";
+                            $this->errors[$field[$i]] = "Only alphanumeric characters are allowed.";
                             break;
                         }
                     }
                     if ($rule[$z] == 'letters') {
-                        if (!preg_match('/[^A-Za-z]/i', $this->request[$field[$i]])) {
+                        if (!preg_match('/^[A-Za-z]/i', $this->request[$field[$i]])) {
                             $this->errors[$field[$i]] = "$field[$i] accepts letters only.";
                             break;
                         }
@@ -168,7 +181,6 @@ class Request implements RequestInterface
                     }
                     if (preg_match('/match/i', $rule[$z])) {
                         $compare = explode(':', $rule[$z])[1];
-
                         if ($this->request[$field[$i]] !== $this->request[$compare]) {
                             $this->errors[$field[$i]] = "Field did not match to {$compare}.";
                             $this->errors[$compare] = "Field did not match to {$field[$i]}.";
@@ -192,7 +204,6 @@ class Request implements RequestInterface
                 }
             }
         }
-
         $fileRules = array_keys($this->rules);
         for ($f = 0; $f < count($fileRules); $f++) {
             if (array_key_exists($fileRules[$f], $_FILES)) {
@@ -201,9 +212,7 @@ class Request implements RequestInterface
                 }
             }
         }
-
         $redirectRoute = (!is_null($route)) ? $route : $this->route;
-
         if (is_null($this->errors)) {
             return true;
         } else {

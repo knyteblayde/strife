@@ -27,7 +27,7 @@ class Auth
     public function guard()
     {
         if (!isset($_SESSION['user'])) {
-            return Route::redirect('login');
+            return Route::redirect(route('login'));
         } else {
             if (!Token::verify(Session::user()->remember_token)) {
                 return $this->restartSession();

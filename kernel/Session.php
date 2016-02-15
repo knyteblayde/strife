@@ -33,13 +33,11 @@ class Session
      *
      * @param $name
      * @param $value
-     * @return void
+     * @return bool
      */
     public static function set($name, $value)
     {
-        $_SESSION[$name] = $value;
-
-        return true;
+        return $_SESSION[$name] = $value;
     }
 
 
@@ -47,7 +45,7 @@ class Session
      * Unset a session variable
      *
      * @param $name
-     * @return void
+     * @return mixed
      */
     public static function remove($name)
     {
@@ -84,16 +82,18 @@ class Session
      * remove all flash messages if parameter is null
      *
      * @param $name
-     * @return boolean
+     * @return bool
      */
     public static function unsetFlash($name = null)
     {
         if (is_null($name)) {
             if (isset($_SESSION['__FLASH__'])) {
                 unset($_SESSION['__FLASH__']);
+                return;
             }
         } elseif (isset($_SESSION['__FLASH__'][$name])) {
             unset($_SESSION['__FLASH__'][$name]);
+            return;
         } else {
             return false;
         }
@@ -105,7 +105,7 @@ class Session
      *
      * @param $name
      * @param $message
-     * @return void
+     * @return bool
      */
     public static function setFlash($name, $message)
     {

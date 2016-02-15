@@ -85,15 +85,19 @@ abstract class Form
 
 
     /**
-     * Close form.
+     * Close the form and destroy all
+     * session resources by default.
      *
+     * @param bool $destroyFieldsAndError
      * @return string
      */
-    public static function close()
+    public static function close($destroyFieldsAndError = true)
     {
         self::$fields = [];
-        unset($_SESSION['__ERRORS__']);
-        unset($_SESSION['__FIELDS__']);
+        if ($destroyFieldsAndError) {
+            unset($_SESSION['__ERRORS__']);
+            unset($_SESSION['__FIELDS__']);
+        }
 
         return "</form>\n";
     }
@@ -102,7 +106,7 @@ abstract class Form
     /**
      * Returns a text form input
      *
-     * @param $name
+     * @param string $name
      * @param null $value
      * @param array $options
      * @return string

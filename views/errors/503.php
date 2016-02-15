@@ -4,18 +4,23 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif, 'Helvetica Neue', Arial;
-            color: #3aa3aa;
-            background: #f4f4f4;
+            color: #555555;
+            background: #f5f5f5
         }
 
         .wrapper {
             text-align: center;
-            margin-top: 20%;
+            margin-top: 20%
         }
 
-        h1{
+        h1 {
             font-weight: normal;
-            font-size: 2.5em;
+            font-size: 2.6em;
+            margin: 0
+        }
+
+        p {
+            margin: 0
         }
     </style>
     <title>503 - Server in maintenance.</title>

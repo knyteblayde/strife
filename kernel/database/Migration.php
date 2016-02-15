@@ -404,4 +404,14 @@ abstract class Migration extends Connection
     }
 
 
+    /**
+     * Return the array containing values
+     * formulated through its migration class.
+     *
+     * @return array
+     */
+    public function dictionary()
+    {
+        return ($this->fields);
+    }
 }

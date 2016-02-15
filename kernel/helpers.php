@@ -48,6 +48,40 @@ if (!function_exists('random_string')) {
 }
 
 
+if (!function_exists('csv_encode')) {
+    /**
+     * encode an array to csv values
+     *
+     * @param array $values
+     * @return string
+     */
+    function csv_encode($values = [])
+    {
+        $csv = "";
+        foreach ((array)$values as $value) {
+            $csv .= "$value,";
+        }
+
+        return (trim($csv, ','));
+    }
+}
+
+
+if (!function_exists('csv_decode')) {
+    /**
+     * encode an array to csv values
+     *
+     * @param array $values
+     * @return string
+     */
+    function csv_decode($values)
+    {
+        $values = explode(',', trim($values, ','));
+        return ($values);
+    }
+}
+
+
 if (!function_exists('download_file')) {
     /**
      * Forces a file to be downloaded
@@ -111,6 +145,20 @@ if (!function_exists('route')) {
     }
 }
 
+
+if (!function_exists('redirect')) {
+    /**
+     * Alternative to Route::redirect()
+     *
+     * @param $route
+     * @return string
+     **/
+
+    function redirect($route)
+    {
+        return Route::redirect($route);
+    }
+}
 
 if (!function_exists('view')) {
     /**
@@ -221,7 +269,7 @@ if (!function_exists('css')) {
     function css($path)
     {
         $styles = "";
-        if (count(func_get_args() > 1)) {
+        if (count(func_get_args()) > 1) {
             foreach (func_get_args() as $arg) {
                 $styles .= "<link href=\"$arg\" rel=\"stylesheet\" type=\"text/css\">\n";
             }
@@ -246,7 +294,7 @@ if (!function_exists('js')) {
     function js($path)
     {
         $scripts = "";
-        if (count(func_get_args() > 1)) {
+        if (count(func_get_args()) > 1) {
             foreach (func_get_args() as $arg) {
                 $scripts .= "<script type=\"text/javascript\" src=\"$arg\"></script>\n";
             }
@@ -288,9 +336,9 @@ if (!function_exists('errors')) {
     function errors($errorName)
     {
         if (isset($_SESSION['__ERRORS__'][$errorName])) {
-            return $_SESSION['__ERRORS__'][$errorName];
+            return ($_SESSION['__ERRORS__'][$errorName]);
         } else {
-            return '';
+            return (null);
         }
     }
 }
@@ -307,9 +355,9 @@ if (!function_exists('fields')) {
     function fields($name)
     {
         if (isset($_SESSION['__FIELDS__'][$name])) {
-            return $_SESSION['__FIELDS__'][$name];
+            return ($_SESSION['__FIELDS__'][$name]);
         } else {
-            return '';
+            return (null);
         }
     }
 }
@@ -319,11 +367,12 @@ if (!function_exists('date_now')) {
     /**
      * Return current date
      *
+     * @param $separator
      * @return string
      */
-    function date_now()
+    function date_now($separator = ' ')
     {
-        return Date('F j, Y');
+        return Date("F{$separator}j,{$separator}Y");
     }
 }
 
@@ -353,25 +402,7 @@ if (!function_exists('year_now')) {
     }
 }
 
-
-use Kernel\Database\Database;
 use Kernel\Hash;
-
-if (!function_exists('query')) {
-
-    /**
-     * Performs query and returns object
-     *
-     * @param $string
-     * @return mixed
-     */
-    function query($string)
-    {
-        $db = new Database;
-
-        return $db->query($string);
-    }
-}
 
 if (!function_exists('hash_encode')) {
 
@@ -412,12 +443,32 @@ if (!function_exists('assign')) {
      * @param string $name
      * @param string $url
      * @param string $action
+     * @param null $requestMethod
      * @param null $namespace
      * @return mixed
      */
-    function assign($name, $url, $action, $namespace = null)
+    function assign($name, $url, $action, $requestMethod = null, $namespace = null)
     {
-        return Route::assign($name, $url, $action, $namespace);
+        return Route::assign($name, $url, $action, $requestMethod, $namespace);
+    }
+}
+
+if (!function_exists('post')) {
+
+    /**
+     * Assign a POST request route
+     * that accepts POST request method.
+     *
+     * @param string $name
+     * @param string $url
+     * @param string $action
+     * @param string $requestMethod
+     * @param null $namespace
+     * @return mixed
+     */
+    function post($name, $url, $action, $requestMethod = 'POST', $namespace = null)
+    {
+        return Route::post($name, $url, $action, $requestMethod, $namespace);
     }
 }
 
@@ -454,6 +505,7 @@ if (!function_exists('hostname')) {
 
     /**
      * Return current host's name
+     *
      * @return mixed
      */
     function hostname()
@@ -466,6 +518,7 @@ if (!function_exists('referer')) {
 
     /**
      * Return current referer name
+     *
      * @return mixed
      */
     function referer()
@@ -474,20 +527,147 @@ if (!function_exists('referer')) {
     }
 }
 
-
 /**
- * Global Directory names.
- * directory pointer positioned from /public/index.php
+ * Application Directories
  */
-define("APP_PATH", "../app/");
-define("CONTROLLERS_PATH", "../app/controllers/");
-define("MIGRATIONS_PATH", "../app/migrations/");
-define("MODELS_PATH", "../app/models/");
-define("PROCESSES_PATH", "../app/processes/");
-define("REQUESTS_PATH", "../app/requests/");
-define("CONFIG_PATH", "../app/requests/");
-define("KERNEL_PATH", "../kernel/");
-define("PUBLIC_PATH", "../public/");
-define("STORAGE_PATH", "../storage/");
-define("VENDOR_PATH", "../vendor/");
-define("VIEWS_PATH", "../views/");
+
+if (!function_exists('root_dir')) {
+    /**
+     * @return mixed
+     */
+    function root_dir()
+    {
+        return str_replace('public', '', $_SERVER['DOCUMENT_ROOT']);
+    }
+}
+
+
+if (!function_exists('app_dir')) {
+    /**
+     * @return string
+     */
+    function app_dir()
+    {
+        return str_replace('public', '', $_SERVER['DOCUMENT_ROOT']) . "app" . DIRECTORY_SEPARATOR;
+    }
+}
+
+
+if (!function_exists('config_dir')) {
+    /**
+     * @return string
+     */
+    function config_dir()
+    {
+        return str_replace('public', '', $_SERVER['DOCUMENT_ROOT']) . "config" . DIRECTORY_SEPARATOR;
+    }
+}
+
+
+if (!function_exists('kernel_dir')) {
+    /**
+     * @return string
+     */
+    function kernel_dir()
+    {
+        return str_replace('public', '', $_SERVER['DOCUMENT_ROOT']) . "kernel" . DIRECTORY_SEPARATOR;
+    }
+}
+
+
+if (!function_exists('public_dir')) {
+    /**
+     * @return mixed
+     */
+    function public_dir()
+    {
+        return $_SERVER['DOCUMENT_ROOT'];
+    }
+}
+
+
+if (!function_exists('storage_dir')) {
+    /**
+     * @return string
+     */
+    function storage_dir()
+    {
+        return str_replace('public', '', $_SERVER['DOCUMENT_ROOT']) . "storage" . DIRECTORY_SEPARATOR;
+    }
+}
+
+
+if (!function_exists('vendor_dir')) {
+    /**
+     * @return string
+     */
+    function vendor_dir()
+    {
+        return str_replace('public', '', $_SERVER['DOCUMENT_ROOT']) . "vendor" . DIRECTORY_SEPARATOR;
+    }
+}
+
+
+if (!function_exists('views_dir')) {
+    /**
+     * @return string
+     */
+    function views_dir()
+    {
+        return str_replace('public', '', $_SERVER['DOCUMENT_ROOT']) . "views" . DIRECTORY_SEPARATOR;
+    }
+}
+
+
+if (!function_exists('endswith')) {
+    /**
+     * Determines whether an ending
+     * characters of a string matches
+     * w/ the given parameter.
+     *
+     * @param $string
+     * @param $search
+     * @param $matchCasing
+     * @return string
+     */
+    function endswith($string, $search, $matchCasing = false)
+    {
+        $case = '';
+        if ($matchCasing == false) {
+            $case = 'i';
+        }
+
+        if (preg_match('/' . $search . '$/' . $case, $string)) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+}
+
+
+if (!function_exists('startswith')) {
+    /**
+     * Determines whether starting
+     * characters of a string matches
+     * w/ the given parameter.
+     *
+     * @param $string
+     * @param $search
+     * @param $matchCasing
+     * @return string
+     */
+    function startswith($string, $search, $matchCasing = false)
+    {
+        $case = '';
+        if ($matchCasing == false) {
+            $case = 'i';
+        }
+
+        if (preg_match('/^' . $search . '/' . $case, $string)) {
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+}

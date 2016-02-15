@@ -8,6 +8,7 @@ class WelcomeController extends Auth
      **/
     public function index()
     {
-        return print "Welcome! dawg, <a href='/logout'>Logout</a>";
+        $name = Session::user()->firstname;
+        return print "Welcome {$name}! , <a href='/logout'>Logout</a>";
     }
 }

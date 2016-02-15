@@ -16,9 +16,9 @@ class Log
      */
     public function __construct($message, $file = 'logs.txt')
     {
-        $file = fopen(STORAGE_PATH . "logs/" . $file, 'a');
+        $file = fopen(storage_dir() . "logs/" . $file, 'a');
 
-        if (fwrite($file, Date("m-d-Y") . ' at ' . Date("h:i A") . ' ' . $message . "\n")) {
+        if (fwrite($file, $message . "\n")) {
             $result = true;
         } else {
             $result = false;

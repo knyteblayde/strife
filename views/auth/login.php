@@ -17,18 +17,18 @@
         <div class="fluent">
             {!Form::open(route('attempt'))!}
             <p class="heading">Login</p>
-            <div class="form-group{%!empty(errors('username')) ? ' has-error':''%}">
+            <div class="form-group{{!empty(errors('username')) ? ' has-error':''}}">
                 <label class="subheading">Username</label>
                 <input type="text" class="form-control" name="username">
-                <i class="error">{%errors('username')%}</i>
+                <i class="error">{{errors('username')}}</i>
             </div>
-            <div class="form-group{%!empty(errors('password')) ? ' has-error':''%}">
+            <div class="form-group{{!empty(errors('password')) ? ' has-error':''}}">
                 <label class="subheading">Password</label>
                 <input type="password" class="form-control" name="password">
-                <i class="error">{%errors('password')%}</i>
+                <i class="error">{{errors('password')}}</i>
             </div>
             <i class="error">{!Session::getFlash('flash')!}</i>
-            <button type="submit" class="btn btn-submit"><i class="glyphicon glyphicon-lock"></i> Login </button>
+            <button type="submit" class="btn btn-submit"><i class="glyphicon glyphicon-lock"></i> Login</button>
             {!Form::close()!}
         </div>
         <br>

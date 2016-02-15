@@ -37,7 +37,7 @@ class Connection
         if (is_null(self::$pdo)) {
             self::initialize();
         }
-        return self::$pdo;
+        return (self::$pdo);
     }
 
 
@@ -64,11 +64,8 @@ class Connection
      * @param int transact
      * @return mixed
      **/
-    public static function initialize($transact = 1)
+    public static function initialize()
     {
-        if (!$transact) {
-            return false;
-        }
         try {
             if (is_null(self::$pdo)) {
                 self::$pdo = new PDO(
@@ -83,8 +80,10 @@ class Connection
                 self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            return print $e->getMessage();
         }
+
+        return;
     }
 
 

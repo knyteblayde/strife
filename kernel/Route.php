@@ -11,7 +11,7 @@ abstract class Route extends Engine
      * Load routes list
      *
      * @param $routes
-     * @return void
+     * @return string
      */
     public static function register($routes = [])
     {
@@ -53,27 +53,8 @@ abstract class Route extends Engine
      */
     public static function redirect($route)
     {
-        $path = array_key_exists($route, self::$routes) ? self::$routes[$route]['url'] : $route;
-
-        return header("location: {$path}");
+        return header("location: {$route}");
     }
-
-
-    /**
-     * Redirect to a specific route if
-     * it is valid or uses the given string
-     * as route.
-     *
-     * @param $route
-     */
-    public static function destroy($route)
-    {
-        $location = array_key_exists($route, self::$routes) ? self::$routes[$route]['url'] : $route;
-
-        return header("location: {$location}");
-    }
-
-
 }
 
 
