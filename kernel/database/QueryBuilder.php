@@ -328,44 +328,38 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
     /**
      * Backup a database table.
      *
-     * @param bool $encrypted
      * @return bool
      */
-    public static function backup($encrypted = false)
+    public static function backup()
     {
-        $file = new FileHandler(storage_dir() . 'backups/' . static::$table . ".dat", 'w+');
-        $data = self::get(PDO::FETCH_ASSOC);
-        foreach ($data as $index => $item) {
-            if ($encrypted) {
-                $file->write(Encryption::encrypt(json_encode($item)) . "\n");
-            } else {
-                $file->write(json_encode($item) . "\n");
-            }
+        $file = new FileHandler(storage_dir() . 'backups/' . static::$table . ".json", 'w+');
+        $data = self::jsonEncode();
+        if ($file->write($data, 'w')) {
+            return (true);
+        } else {
+            return (false);
         }
-        return (true);
     }
 
 
     /**
      * Restore a database table
      *
-     * @param bool $encrypted
      * @return bool
      */
-    public static function restore($encrypted = false)
+    public static function restore()
     {
-        $file = new FileHandler(storage_dir() . 'backups/' . static::$table . ".dat", 'r');
-        foreach ($file->toArray() as $item) {
-            if ($item == false) {
+        $file = new FileHandler(storage_dir() . 'backups/' . static::$table . ".json", 'r');
+        $result = null;
+        foreach (json_decode($file->read()) as $data) {
+            if (self::insert((array)$data)) {
+                $result = true;
+            } else {
+                $result = false;
                 break;
             }
-            if ($encrypted) {
-                self::insert((array)json_decode(Encryption::decrypt($item)));
-            } else {
-                self::insert((array)json_decode($item));
-            }
         }
-        return (true);
+        return ($result);
     }
 
 
@@ -526,19 +520,14 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
      */
     public function save()
     {
-        $result = false;
-
         if (self::update($this->fields, $this->original->id)) {
-            $result = true;
             foreach ($this->fields as $field => $value) {
                 if (property_exists($this->original, $field)) {
-                    $this->original->$field = self::where('id', $this->original->id)->pull($field);
+                    $this->original->$field = self::find($this->original->id)->pull($field);
                 }
             }
         }
         $this->fields = [];
-
-        return ($result);
     }
 
 
@@ -586,7 +575,7 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
              * if delete is chained from first() and find()
              * method, append the delete keyword on $query
              */
-            if (is_null($id) && !isset(self::$result)) {
+            if (is_null($id) && empty(self::$result)) {
                 self::$query['select'] = 'DELETE ';
                 $stmt = self::getInstance()->prepare(self::parseQuery());
                 $stmt = $stmt->execute(self::$values);
@@ -682,8 +671,14 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
     public static function where($field, $a = null, $b = null)
     {
         self::$table = static::$table;
-        $param = ($b == null) ? "= ?" : "{$a} ?";
-        self::$values[] = ($b == null) ? $a : $b;
+
+        if (!is_null($b)) {
+            $param = "{$a} ?";
+            self::$values[] = $b;
+        } else {
+            $param = "= ?";
+            self::$values[] = $a;
+        }
 
         if (isset(self::$query['where']) && preg_match('/WHERE/i', self::$query['where'])) {
             self::$query['where'] = self::$query['where'] . " AND {$field} {$param}";
@@ -786,8 +781,14 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
     public static function orWhere($field, $a = null, $b = null)
     {
         self::$table = static::$table;
-        $param = ($b == null) ? "= ?" : "{$a} ?";
-        self::$values[] = ($b == null) ? $a : $b;
+
+        if (!is_null($b)) {
+            $param = "{$a} ?";
+            self::$values[] = $b;
+        } else {
+            $param = "= ?";
+            self::$values[] = $a;
+        }
 
         if (isset(self::$query['where']) && preg_match('/WHERE/i', self::$query['where'])) {
             self::$query['where'] = self::$query['where'] . " OR {$field} {$param}";
@@ -881,10 +882,6 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
     public static function find($id)
     {
         try {
-            if (isset($id) && !is_numeric($id)) {
-                return trigger_error("Argument passed in find() method should be numeric.", E_USER_ERROR);
-            }
-
             self::$table = static::$table;
             $stmt = self::getInstance()->prepare("SELECT * FROM " . static::$table . " WHERE id=? LIMIT 1");
             $stmt->execute([$id]);
@@ -912,21 +909,26 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
     public static function pull($column)
     {
         try {
-            self::$query['select'] = $column;
-            self::$query['limit'] = "LIMIT 1";
-            $stmt = self::getInstance()->prepare(self::parseQuery());
-            $stmt->execute(array_values(self::$values));
-            self::$values = [];
-            self::$query = [];
-            $result = $stmt->fetch(PDO::FETCH_OBJ);
-            if ($result) {
-                if (property_exists($result, $column)) {
-                    return ($result->$column);
+            if (!empty(self::$result)) {
+                if (property_exists(self::$result, $column)) {
+                    return (self::$result->$column);
                 } else {
                     return (null);
                 }
             } else {
-                return (false);
+                $stmt = self::getInstance()->prepare(self::parseQuery());
+                $stmt->execute(array_values(self::$values));
+                $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+                if (!$result) {
+                    return (false);
+                } else {
+                    if (property_exists($result, $column)) {
+                        return ($result->$column);
+                    } else {
+                        return (null);
+                    }
+                }
             }
         } catch (PDOException $e) {
             print $e->getMessage();
@@ -945,9 +947,6 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
         try {
             $stmt = self::getInstance()->prepare(self::parseQuery());
             $stmt->execute(array_values(self::$values));
-            self::$values = [];
-            self::$query = [];
-
             return ($stmt->rowCount() == 0) ? false : true;
         } catch (PDOException $e) {
             print $e->getMessage();

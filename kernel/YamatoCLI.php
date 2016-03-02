@@ -46,13 +46,13 @@ final class YamatoCLI
      COMMANDS                 ARGUMENTS                 DESCRIPTION
 --------------------	--------------------    -----------------------------
 
-{Cleanup}
-  clear:all                                     clear all garbage (backups excluded)
+[Cleanup]
+  clear:all                                     clear all dirs(backups excluded)
   clear:sessions                                clear sessions directory
   clear:logs                                    clear logs directory
   clear:backups                                 clear backups directory
 
-{Generators}
+[Generators]
   create:model          [name] [table=null]     create a model class
   create:controller     [name] [empty=null]     create a controller class
   create:migration      [name] [table=null]     create a migration class
@@ -61,7 +61,7 @@ final class YamatoCLI
   create:seeder         [name] [model=null]     create a database seeder class
   create:key                                    create a new site/application key
 
-{Database}
+[Database]
   db:migrate                                    install all migrations
   db:rollback                                   rollback all migrations
   db:table:up           [class]                 migrate a specific table using model class
@@ -70,7 +70,7 @@ final class YamatoCLI
   db:restore                                    restore last made backup on database
   db:seed                                       carry-out database seeding
 
-{Security}
+[Security]
   hash:encode           [string]                returns the hash of a given string
   hash:verify           [string] [hashed]       verify whether data matches the hashed value
   cipher:encrypt        [string]                encrypt a string user caesar cipher algorithm
@@ -181,7 +181,7 @@ EOF;
             if (!isset($this->command[2])) {
                 die("\nhash:verify expects [data]\n");
             }
-            return die("\n" . Hash::encode($this->command[2]) . "\n");
+            return die("\n" . Hash::encode(trim($this->command[2], ' ')));
         } elseif ($this->command[1] == 'hash:verify') {
             if (!isset($this->command[2]) || !isset($this->command[3])) {
                 die("\ntoo few arguments, hash:verify expects [data] and [hashed] value\n");
@@ -719,8 +719,9 @@ EOF;
 
             $seeder =  'App\Seeders\\' . str_replace('.php', '', $it->getFilename());
             new $seeder();
-            return die("\nSeeding completed.\n");
         }
+
+        return die("\nSeeding completed.\n");
     }
 
 

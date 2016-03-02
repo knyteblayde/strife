@@ -8,7 +8,6 @@ use Kernel\Token;
  */
 class Auth
 {
-
     /**
      * Start Auth
      **/

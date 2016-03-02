@@ -27,7 +27,7 @@ class Cipher
      */
     public static function encrypt($string)
     {
-        $string = str_split($string);
+        $string = str_split(strtolower($string));
         $flipped = array_flip(self::$alphabet);
         $encrypted = "";
 
@@ -47,7 +47,7 @@ class Cipher
      */
     public static function decrypt($string)
     {
-        $string = str_split($string);
+        $string = str_split(strtolower($string));
         $flipped = array_flip(self::$alphabet);
         $decrypted = "";
 
