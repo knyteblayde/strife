@@ -6,10 +6,18 @@
 
 use Kernel\Database\Connection;
 
-Connection::parameters([
+
+/**
+ * Here you can specify multiple database
+ * connections by giving an alias.
+ *
+ * first param is the alias for the connection instance
+ * second param is an array of connection parameters
+ */
+Connection::parameters('conn1',[
     'driver'   => 'mysql',
     'hostname' => 'localhost',
-    'database' => 'rocketflare',
+    'database' => 'strife',
     'username' => 'root',
     'password' => '',
     'charset'  => 'utf8',
@@ -20,4 +28,4 @@ Connection::parameters([
 /**
  * Begin Transaction with database
  */
-Connection::initialize();
+//Connection::initialize('conn1');

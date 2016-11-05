@@ -3,10 +3,12 @@
   "description": "A Fast and Lightweight PHP MVC Framework.",
   "keywords": [
     "framework",
-    "strife"
+    "strife",
+    "mvc",
+    "rad"
   ],
   "license": "MIT",
-  "version": "2.8.5",
+  "version": "2.8.8",
   "type": "project",
   "require": {
   },

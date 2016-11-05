@@ -128,7 +128,13 @@ class Engine
                              * if strict matching is off,
                              * perform regex matching ignoring character casing.
                              */
-                            if (preg_match("/^{$url[$index]}$/i", $u)) {
+
+                            /** Escape regex keywords */
+                            $key = preg_replace('/\[/', '\[', $url[$index]);
+                            $key = preg_replace('/\]/', '\]', $key);
+                            $key = preg_replace('/\(/', '\(', $key);
+                            $key = preg_replace('/\)/', '\)', $key);
+                            if (preg_match("/^{$key}$/i", $u)) {
                                 $compare++;
                                 continue;
                             } else {
@@ -329,7 +335,7 @@ class Engine
          * Dispatch the controller class, prepend namespace if specified and pass
          * it all possible arguments.
          */
-        require_once app_dir(). 'controllers/' . self::$subdirectory . self::$controller . '.php';
+        require_once '../app/controllers/' . self::$subdirectory . self::$controller . '.php';
         $controller = self::$namespace . self::$controller;
 
         return (call_user_func_array([new $controller(), self::$method], self::$parameters));
@@ -343,7 +349,7 @@ class Engine
      */
     private static function error()
     {
-        require_once views_dir() . 'errors/404.php';
+        require_once '../views/errors/404.php';
         return exit();
     }
 
@@ -356,7 +362,8 @@ class Engine
     private static function parseUrl()
     {
         if (isset($_GET['url'])) {
-            $url = explode('/', trim(filter_var($_GET['url'], FILTER_SANITIZE_URL), '/'));
+            $url = filter_var($_GET['url'], FILTER_SANITIZE_URL);
+            $url = explode('/', trim($url, '/'));
         } else {
             $url = array();
         }

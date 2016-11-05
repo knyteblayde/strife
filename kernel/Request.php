@@ -68,7 +68,7 @@ class Request implements RequestInterface
             }
         }
 
-        return true;
+        return (true);
     }
 
 
@@ -81,7 +81,11 @@ class Request implements RequestInterface
      */
     public function get($field)
     {
-        return $this->sanitize($this->request[$field]);
+        if (array_key_exists($field, $this->request)) {
+            return $this->sanitize($this->request[$field]);
+        } else {
+            return (null);
+        }
     }
 
 
@@ -137,7 +141,7 @@ class Request implements RequestInterface
                 for ($z = 0; $z < count($rule); $z++) {
                     if ($rule[$z] == 'required') {
                         if (strlen($this->request[$field[$i]]) == 0) {
-                            $this->errors[$field[$i]] = "{$field[$i]} is required.";
+                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . " is required.";
                             break;
                         }
                     }
@@ -151,7 +155,7 @@ class Request implements RequestInterface
                             }
                         }
                         if ($db->table(explode(':', $rule[$z])[1])->where($field[$i], $value)->exists()) {
-                            $this->errors[$field[$i]] = "{$field[$i]} not available.";
+                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . " not available.";
                             break;
                         }
                     }
@@ -169,13 +173,13 @@ class Request implements RequestInterface
                     }
                     if ($rule[$z] == 'letters') {
                         if (!preg_match('/^[A-Za-z]/i', $this->request[$field[$i]])) {
-                            $this->errors[$field[$i]] = "$field[$i] accepts letters only.";
+                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . "  accepts letters only.";
                             break;
                         }
                     }
                     if ($rule[$z] == 'number' || $rule[$z] == 'numeric') {
                         if (!preg_match('/[0-9]/', $this->request[$field[$i]])) {
-                            $this->errors[$field[$i]] = "{$field[$i]} should be numeric.";
+                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . "  should be numeric.";
                             break;
                         }
                     }
@@ -190,14 +194,14 @@ class Request implements RequestInterface
                     if (preg_match('/min/i', $rule[$z])) {
                         $min = explode(':', $rule[$z])[1];
                         if (strlen($this->request[$field[$i]]) < $min) {
-                            $this->errors[$field[$i]] = "{$field[$i]} requires a minimum of {$min} characters.";
+                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . " requires a minimum of {$min} characters.";
                             break;
                         }
                     }
                     if (preg_match('/max/i', $rule[$z])) {
                         $max = explode(':', $rule[$z])[1];
                         if (strlen($this->request[$field[$i]]) > $max) {
-                            $this->errors[$field[$i]] = "{$field[$i]} requires a maximum of {$max} characters.";
+                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . " requires a maximum of {$max} characters.";
                             break;
                         }
                     }
@@ -208,7 +212,7 @@ class Request implements RequestInterface
         for ($f = 0; $f < count($fileRules); $f++) {
             if (array_key_exists($fileRules[$f], $_FILES)) {
                 if (empty($_FILES[$fileRules[$f]]['name'])) {
-                    $this->errors[$fileRules[$f]] = "{$fileRules[$f]} is required.";
+                    $this->errors[$fileRules[$f]] = str_replace('_', ' ', $fileRules[$f]) . " is required.";
                 }
             }
         }

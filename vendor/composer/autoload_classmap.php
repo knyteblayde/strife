@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Migrations\\UsersTableMigration' => $baseDir . '/app/migrations/UsersTableMigration.php',
-    'App\\Models\\Articles' => $baseDir . '/app/models/Articles.php',
     'App\\Models\\User' => $baseDir . '/app/models/User.php',
     'App\\Requests\\LoginRequest' => $baseDir . '/app/requests/LoginRequest.php',
     'App\\Seeders\\UsersTableSeeder' => $baseDir . '/app/seeders/UsersTableSeeder.php',

@@ -1,32 +1,31 @@
 <html>
 <head>
     <link rel="stylesheet" href="/favicon.ico"/>
-    <head>
-        <style>
-            body {
-                margin: 0;
-                font-family: 'Segoe UI', sans-serif, 'Helvetica Neue', Arial;
-                color: #555555;
-                background: #f5f5f5
-            }
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif, 'Helvetica Neue', Arial;
+            color: #555555;
+            background: #f5f5f5
+        }
 
-            .wrapper {
-                text-align: center;
-                margin-top: 20%
-            }
+        .wrapper {
+            text-align: center;
+            margin-top: 20%
+        }
 
-            h1 {
-                font-weight: normal;
-                font-size: 2.6em;
-                margin: 0
-            }
+        h1 {
+            font-weight: normal;
+            font-size: 2.6em;
+            margin: 0
+        }
 
-            p {
-                margin: 0
-            }
-        </style>
-        <title>404 - Page Not Found!</title>
-    </head>
+        p {
+            margin: 0
+        }
+    </style>
+    <title>404 - Page Not Found!</title>
+</head>
 <body>
 <div class="wrapper">
     <h1>Page Not Found :(</h1>

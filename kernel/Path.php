@@ -28,10 +28,11 @@ class Path
      * parameter given
      *
      * @param $key
+     * @return mixed
      */
     static function to($key)
     {
-        return self::$paths[$key];
+        return array_key_exists($key, self::$paths) ? self::$paths[$key] : null;
     }
 }
 

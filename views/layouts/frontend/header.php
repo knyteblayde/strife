@@ -9,6 +9,6 @@
     <meta name="keywords" content="{{@$keywords}}">
     <meta name="description" content="{{@$description}}">
     <meta name="author" content="{{@$author}}">
-    <link rel="stylesheet" href="/css/core.css">
+    <link rel="stylesheet" href="css/core.css">
 </head>
 <body>

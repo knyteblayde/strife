@@ -32,6 +32,8 @@ class Auth
                 return $this->restartSession();
             }
         }
+
+        return (true);
     }
 
 

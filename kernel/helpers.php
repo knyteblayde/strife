@@ -160,11 +160,26 @@ if (!function_exists('redirect')) {
     }
 }
 
-if (!function_exists('view')) {
+
+if (!function_exists('refresh')) {
     /**
-     * Alternative use of Route::get()
-     * inherited the $routes array from
-     * Routes class.
+     * Alternative to Route::redirect()
+     *
+     * @param $seconds
+     * @param $route
+     * @return string
+     **/
+
+    function refresh($seconds, $route)
+    {
+        return Route::refresh($seconds, $route);
+    }
+}
+
+
+if (!function_exists('render')) {
+    /**
+     * Alternative use of View::render()
      *
      * @param $template
      * @param $params

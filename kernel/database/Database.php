@@ -60,7 +60,7 @@ class Database extends QueryBuilder
             echo $e->getMessage();
         }
 
-        return;
+        return (true);
     }
 
 

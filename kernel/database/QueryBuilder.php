@@ -118,7 +118,6 @@ interface QueryBuilderInterface
 use PDO;
 use PDOException;
 use Kernel\Formatter;
-use Kernel\Encryption;
 use Kernel\FileHandler;
 use Kernel\Exceptions\ExceptionMessages;
 use Kernel\Exceptions\InvalidMethodCallException;
@@ -224,7 +223,7 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
 
 
     /**
-     * Serves as a parser for bot __call and __callStatic
+     * Serves as a parser for both __call and __callStatic
      * magic methods.
      * Handles dynamically created method that does not exist
      * in this class.
@@ -520,14 +519,18 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
      */
     public function save()
     {
-        if (self::update($this->fields, $this->original->id)) {
-            foreach ($this->fields as $field => $value) {
-                if (property_exists($this->original, $field)) {
-                    $this->original->$field = self::find($this->original->id)->pull($field);
+        if (!empty($this->fields)) {
+            if (self::update($this->fields, $this->original->id)) {
+                foreach ($this->fields as $field => $value) {
+                    if (property_exists($this->original, $field)) {
+                        $this->original->$field = self::find($this->original->id)->pull($field);
+                    }
                 }
             }
+            $this->fields = [];
+        } else {
+            return (false);
         }
-        $this->fields = [];
     }
 
 
@@ -909,25 +912,19 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
     public static function pull($column)
     {
         try {
-            if (!empty(self::$result)) {
-                if (property_exists(self::$result, $column)) {
-                    return (self::$result->$column);
+            $stmt = self::getInstance()->prepare(self::parseQuery());
+            $stmt->execute(array_values(self::$values));
+            self::$values = [];
+            self::$query = [];
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if (!$result) {
+                return (false);
+            } else {
+                if (property_exists($result, $column)) {
+                    return ($result->$column);
                 } else {
                     return (null);
-                }
-            } else {
-                $stmt = self::getInstance()->prepare(self::parseQuery());
-                $stmt->execute(array_values(self::$values));
-                $result = $stmt->fetch(PDO::FETCH_OBJ);
-
-                if (!$result) {
-                    return (false);
-                } else {
-                    if (property_exists($result, $column)) {
-                        return ($result->$column);
-                    } else {
-                        return (null);
-                    }
                 }
             }
         } catch (PDOException $e) {

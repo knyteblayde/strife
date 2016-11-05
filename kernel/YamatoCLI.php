@@ -1,7 +1,6 @@
 <?php namespace Kernel;
 
 use DirectoryIterator;
-use Kernel\Database\Database;
 
 /**
  * Class YamatoCLI
@@ -82,7 +81,7 @@ EOF;
             return $this->parseCommand();
         }
 
-        return;
+        return (true);
     }
 
 

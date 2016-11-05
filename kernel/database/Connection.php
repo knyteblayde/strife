@@ -35,9 +35,10 @@ class Connection
     public static function getInstance()
     {
         if (is_null(self::$pdo)) {
-            self::initialize();
+            return user_error('Connection is not initialized.', E_USER_ERROR);
+        } else {
+            return (self::$pdo);
         }
-        return (self::$pdo);
     }
 
 
@@ -46,11 +47,12 @@ class Connection
      * as array() and store to self::$cxn
      *
      * @param $cxn = []
+     * @param $alias
      * @return mixed
      **/
-    public static function parameters($cxn = array())
+    public static function parameters($alias, $cxn = array())
     {
-        self::$cxn = $cxn;
+        self::$cxn[$alias] = $cxn;
 
         return new self;
     }
@@ -59,31 +61,36 @@ class Connection
     /**
      * Initialize connection: set self::$pdo
      * to new instance of PDO object.
+     * can create another instance of connection
+     * as the instance name(alias) given as first parameter
+     * that will be used to connect to.
+     * second param will be the array of connection parameters.
      *
      * @todo connect to database
      * @param int transact
+     * @param string $alias
      * @return mixed
      **/
-    public static function initialize()
+    public static function initialize($alias)
     {
         try {
-            if (is_null(self::$pdo)) {
+            if (array_key_exists($alias, self::$cxn)) {
                 self::$pdo = new PDO(
-                    self::$cxn['driver'] . ":hostname=" .
-                    self::$cxn['hostname'] . ";dbname=" .
-                    self::$cxn['database'] . ";port=" .
-                    self::$cxn['port'] . ";charset=" .
-                    self::$cxn['charset'],
-                    self::$cxn['username'],
-                    self::$cxn['password']
+                    self::$cxn[$alias]['driver'] . ":hostname=" .
+                    self::$cxn[$alias]['hostname'] . ";dbname=" .
+                    self::$cxn[$alias]['database'] . ";port=" .
+                    self::$cxn[$alias]['port'] . ";charset=" .
+                    self::$cxn[$alias]['charset'],
+                    self::$cxn[$alias]['username'],
+                    self::$cxn[$alias]['password']
                 );
-                self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                return self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } else {
+                return user_error("Connection instance '{$alias}' does not exist.", E_USER_ERROR);
             }
         } catch (PDOException $e) {
             return print $e->getMessage();
         }
-
-        return;
     }
 
 

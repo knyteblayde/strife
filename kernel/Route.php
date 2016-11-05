@@ -55,6 +55,20 @@ abstract class Route extends Engine
     {
         return header("location: {$route}");
     }
+
+
+    /**
+     * Refresh after the number of seconds of wait
+     * to a route given as second parameter
+     *
+     * @param $seconds
+     * @param $route
+     * return mixed
+     */
+    public static function refresh($seconds, $route)
+    {
+        return header("refresh:{$seconds}; url='{$route}'");
+    }
 }
 
 

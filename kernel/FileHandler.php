@@ -38,6 +38,17 @@ class FileHandler
 
 
     /**
+     * Return file handle instance
+     *
+     * @return resource
+     */
+    public function handle()
+    {
+        return (!is_null($this->handle) ? $this->handle : false);
+    }
+
+
+    /**
      * Open a file handle
      *
      * @param $mode

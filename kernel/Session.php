@@ -24,7 +24,7 @@ class Session
      */
     public static function get($name)
     {
-        return (array_key_exists($name, $_SESSION)) ? $_SESSION[$name] : '';
+        return (array_key_exists($name, $_SESSION)) ? $_SESSION[$name] : null;
     }
 
 
@@ -51,8 +51,9 @@ class Session
     {
         if (isset($_SESSION[$name])) {
             unset($_SESSION[$name]);
+            return (true);
         } else {
-            return false;
+            return (false);
         }
     }
 
@@ -89,13 +90,13 @@ class Session
         if (is_null($name)) {
             if (isset($_SESSION['__FLASH__'])) {
                 unset($_SESSION['__FLASH__']);
-                return;
+                return (true);
             }
         } elseif (isset($_SESSION['__FLASH__'][$name])) {
             unset($_SESSION['__FLASH__'][$name]);
             return;
         } else {
-            return false;
+            return (false);
         }
     }
 
@@ -110,9 +111,9 @@ class Session
     public static function setFlash($name, $message)
     {
         if ($_SESSION['__FLASH__'][$name] = $message) {
-            return true;
+            return (true);
         } else {
-            return false;
+            return (false);
         }
     }
 

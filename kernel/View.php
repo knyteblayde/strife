@@ -50,32 +50,32 @@ abstract class View
             extract($_);
         }
 
-        $filename = views_dir() . preg_replace('/\.php$/', '', ltrim($template, '/')) . self::$postfix;
+        $filename = '../views/' . preg_replace('/\.php$/', '', ltrim($template, '/')) . self::$postfix;
 
         if (!file_exists($filename)) {
             trigger_error("File does not exist '{$filename}'", E_USER_ERROR);
         }
+        
+        $___ = file_get_contents($filename);
+        $___ = preg_replace('/\{\{(.*)\}\}$/', '<?php echo htmlentities($1) ?>', $___);
+        $___ = preg_replace('/\{\{/', '<?php echo htmlentities($1', $___);
+        $___ = preg_replace('/\}\}/', ') ?>', $___);
+        $___ = preg_replace('/\{\!(.*)\!\}$/', '<?php echo $1 ?>', $___);
+        $___ = preg_replace('/\{\!/', '<?php echo $1', $___);
+        $___ = preg_replace('/\!\}/', ' ?>', $___);
+        $___ = preg_replace('/\\\{\\\{/', '{{', $___);
+        $___ = preg_replace('/\\\}\\\}/', '}}', $___);
+        $___ = preg_replace('/\{if (.*)\}/', '<?php if ($1) : ?>', $___);
+        $___ = preg_replace('/\{else\}/', '<?php else : ?>', $___);
+        $___ = preg_replace('/\{endif\}/', '<?php endif ?>', $___);
+        $___ = preg_replace('/\{for (.*)\}/', '<?php for ($1) : ?>', $___);
+        $___ = preg_replace('/\{endfor\}/', '<?php endfor ?>', $___);
+        $___ = preg_replace('/\{while (.*)\}/', '<?php while ($1) : ?>', $___);
+        $___ = preg_replace('/\{endwhile\}/', '<?php endwhile ?>', $___);
+        $___ = preg_replace('/\{foreach (.*)\}/', '<?php foreach ($1) : ?>', $___);
+        $___ = preg_replace('/\{endforeach\}/', '<?php endforeach ?>', $___);
 
-        $content = file_get_contents($filename);
-        $content = preg_replace('/\{\{(.*)\}\}$/', '<?php echo htmlentities($1) ?>', $content);
-        $content = preg_replace('/\{\{/', '<?php echo htmlentities($1', $content);
-        $content = preg_replace('/\}\}/', ') ?>', $content);
-        $content = preg_replace('/\{\!(.*)\!\}$/', '<?php echo $1 ?>', $content);
-        $content = preg_replace('/\{\!/', '<?php echo $1', $content);
-        $content = preg_replace('/\!\}/', ' ?>', $content);
-        $content = preg_replace('/\\\{\\\{/', '{{', $content);
-        $content = preg_replace('/\\\}\\\}/', '}}', $content);
-        $content = preg_replace('/\{if (.*)\}/', '<?php if ($1) : ?>', $content);
-        $content = preg_replace('/\{else\}/', '<?php else : ?>', $content);
-        $content = preg_replace('/\{endif\}/', '<?php endif ?>', $content);
-        $content = preg_replace('/\{for (.*)\}/', '<?php for ($1) : ?>', $content);
-        $content = preg_replace('/\{endfor\}/', '<?php endfor ?>', $content);
-        $content = preg_replace('/\{while (.*)\}/', '<?php while ($1) : ?>', $content);
-        $content = preg_replace('/\{endwhile\}/', '<?php endwhile ?>', $content);
-        $content = preg_replace('/\{foreach (.*)\}/', '<?php foreach ($1) : ?>', $content);
-        $content = preg_replace('/\{endforeach\}/', '<?php endforeach ?>', $content);
-
-        return eval(' ?>' . $content . '<?php ');
+        return eval(' ?>' . $___ . '<?php ');
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class View
      */
     public static function get($template)
     {
-        $filename = views_dir() . $template . self::$postfix;
+        $filename = '../views/' . $template . self::$postfix;
 
         if (!file_exists($filename)) {
             trigger_error("File does not exist '{$filename}'", E_USER_ERROR);
