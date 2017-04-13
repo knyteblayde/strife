@@ -7,6 +7,7 @@ use PDOException;
  * Migration Manager
  *
  * Class Migration
+ *
  * @package Kernel\Database
  */
 abstract class Migration extends Connection
@@ -21,275 +22,314 @@ abstract class Migration extends Connection
      * Sets a field to be an auto increment of type
      *
      * @param $name
-     * @param $length
+     * @param $attributes
      * @return string
      **/
-    protected function increments($name, $length = 11)
+    protected function increments($name, $attributes = [])
     {
+        $length = 11;
+        if (array_key_exists('length', $attributes)) {
+            $length = $attributes['length'];
+        }
+
         return $this->fields[$name] = "$name INT($length) UNSIGNED AUTO_INCREMENT PRIMARY KEY";
     }
 
 
     /**
+     * Parse data types for both text and integer
+     *
+     * @param $type
+     * @param $name
+     * @param $attributes array
+     * @return bool
+     */
+
+    public function parseDataType($type, $name, $attributes = [])
+    {
+        $attr = [
+            'length' => 255,
+            'unique' => '',
+            'point' => '',
+            'null' => 'NOT NULL',
+            'primary' => '',
+            'default' => '',
+        ];
+
+
+        if ($type == 'INT') {
+            $attr['length'] = 11;
+        }
+        elseif ($type == 'DECIMAL') {
+            $attr['length'] = 30;
+        }
+
+        if (array_key_exists('length', $attributes)) {
+            $attr['length'] = $attributes['length'];
+        }
+        if (array_key_exists('null', $attributes)) {
+            if ($attributes['null'] == true || $attributes['null'] == 'null') {
+                $attr['null'] = "NULL";
+            }
+        }
+        if (array_key_exists('unique', $attributes)) {
+            if ($attributes['unique'] == true) {
+                $attr['unique'] = ",UNIQUE($name)";
+            }
+        }
+        if (array_key_exists('point', $attributes)) {
+            $attr['point'] = ",{$attributes['point']}";
+        }
+        if (array_key_exists('primary', $attributes)) {
+            if ($attributes['primary'] == true) {
+                $attr['primary'] = ",PRIMARY KEY ($name)";
+            }
+        }
+        if (array_key_exists('default', $attributes)) {
+            $default = trim($attributes['default'], "'");
+            $attr['default'] = " DEFAULT '{$default}'";
+        }
+
+        $command = "{$name} {$type}({$attr['length']}{$attr['point']}) {$attr['null']}{$attr['unique']}{$attr['primary']}{$attr['default']}";
+
+        return ($this->fields[$name] = $command);
+    }
+
+
+
+
+
+    /***************************************************************
      * String Data Types
-     * some methods of this type intentionally removed the $unique param because of they
-     * just don't have to be unique.
      *
+     */
+
+    /**
      * @param $name
-     * @param $length
-     * @param $unique
-     * @param $nullable
+     * @param $attributes array
      * @return string
      **/
-    protected function char($name, $length = 255, $unique = null, $nullable = "NOT NULL")
+    protected function char($name, $attributes = [])
     {
-        $nullable = ($nullable == "null") ? strtoupper($nullable) : $nullable;
-        $params = ($unique == 'unique') ? "$name CHAR($length) $nullable, UNIQUE($name)" : "$name CHAR($length) NOT NULL";
-        return $this->fields[$name] = $params;
+        return $this->parseDataType('CHAR', $name, $attributes);
     }
 
     /**
      * @param $name
-     * @param int $length
-     * @param null $unique
-     * @param string $nullable
+     * @param $attributes array
      * @return string
      */
-    protected function varchar($name, $length = 255, $unique = null, $nullable = "NOT NULL")
+    protected function varchar($name, $attributes = [])
     {
-        $nullable = ($nullable == "null") ? strtoupper($nullable) : $nullable;
-        $params = ($unique == 'unique') ? "$name VARCHAR($length) $nullable, UNIQUE($name)" : "$name VARCHAR($length) NOT NULL";
-        return $this->fields[$name] = $params;
+        return $this->parseDataType('VARCHAR', $name, $attributes);
     }
+
 
     /**
      * @param $name
-     * @param int $length
-     * @param null $unique
-     * @param string $nullable
-     * @return string
-     */
-    protected function tinyText($name, $length = 255, $unique = null, $nullable = "NOT NULL")
-    {
-        $nullable = ($nullable == "null") ? strtoupper($nullable) : $nullable;
-        $params = ($unique == 'unique') ? "$name TINYTEXT($length) $nullable, UNIQUE($name)" : "$name TINYTEXT($length) NOT NULL";
-        return $this->fields[$name] = $params;
-    }
-
-    /**
-     * @param $name
-     * @param $nullable
+     * @param $attributes array
      * @return string
      **/
-    protected function text($name, $nullable = "NOT NULL")
+    protected function tinytext($name, $attributes = [])
     {
-        return $this->fields[$name] = "$name TEXT " . strtoupper($nullable);
+        $null = "NOT NULL";
+        if (array_key_exists('null', $attributes)) {
+            if ($attributes['null'] == true || $attributes['null'] == 'null') {
+                $null = "NULL";
+            }
+        }
+        return $this->fields[$name] = "{$name} TINYTEXT {$null}";
     }
 
     /**
      * @param $name
-     * @param string $nullable
-     * @return string
-     */
-    protected function mediumText($name, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = "$name MEDIUMTEXT " . strtoupper($nullable);
-    }
-
-    /**
-     * @param $name
-     * @param string $nullable
-     * @return string
-     */
-    protected function longText($name, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = "$name LONGTEXT " . strtoupper($nullable);
-    }
-
-    /**
-     * @param $name
-     * @param string $nullable
-     * @return string
-     */
-    protected function binary($name, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = "$name BINARY " . strtoupper($nullable);
-    }
-
-    /**
-     * @param $name
-     * @param string $nullable
-     * @return string
-     */
-    protected function varBinary($name, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = "$name VARBINARY " . strtoupper($nullable);
-    }
-
-
-    /**
-     * Integers Data Types
-     *
-     * @param $name
-     * @param $length
-     * @param $unique
-     * @param $nullable
+     * @param $attributes
      * @return string
      **/
-    protected function tinyInt($name, $length = null, $unique = null, $nullable = "NOT NULL")
+    protected function text($name, $attributes = [])
     {
-        return $this->fields[$name] = $this->parseIntType($name, "TINYINT", $length, $unique, $nullable);
+        $null = "NOT NULL";
+        if (array_key_exists('null', $attributes)) {
+            if ($attributes['null'] == true || $attributes['null'] == 'null') {
+                $null = "NULL";
+            }
+        }
+        return $this->fields[$name] = "{$name} TEXT {$null}";
     }
 
+
     /**
-     * Construct passed in INTEGER data types
-     *
      * @param $name
-     * @param $dataType
-     * @param $length
-     * @param $unique
-     * @param $nullable
-     *
+     * @param $attributes array
+     * @return string
+     */
+    protected function blob($name, $attributes = [])
+    {
+        $null = "NOT NULL";
+        if (array_key_exists('null', $attributes)) {
+            if ($attributes['null'] == true || $attributes['null'] == 'null') {
+                $null = "NULL";
+            }
+        }
+        return $this->fields[$name] = "{$name} BLOB {$null}";
+    }
+
+
+    /**
+     * @param $name
+     * @param $attributes array
+     * @return string
+     */
+    protected function mediumtext($name, $attributes = [])
+    {
+        $null = "NOT NULL";
+        if (array_key_exists('null', $attributes)) {
+            if ($attributes['null'] == true || $attributes['null'] == 'null') {
+                $null = "NULL";
+            }
+        }
+        return $this->fields[$name] = "{$name} MEDIUMTEXT {$null}";
+    }
+
+
+    /**
+     * @param $name
+     * @param $attributes array
+     * @return string
+     */
+    protected function mediumblob($name, $attributes = [])
+    {
+        $null = "NOT NULL";
+        if (array_key_exists('null', $attributes)) {
+            if ($attributes['null'] == true || $attributes['null'] == 'null') {
+                $null = "NULL";
+            }
+        }
+        return $this->fields[$name] = "{$name} MEDIUMBLOB {$null}";
+    }
+
+
+    /**
+     * @param $name
+     * @param $attributes array
+     * @return string
+     */
+    protected function longtext($name, $attributes = [])
+    {
+        $null = "NOT NULL";
+        if (array_key_exists('null', $attributes)) {
+            if ($attributes['null'] == true || $attributes['null'] == 'null') {
+                $null = "NULL";
+            }
+        }
+        return $this->fields[$name] = "{$name} LONGTEXT {$null}";
+    }
+
+
+    /**
+     * @param $name
+     * @param $attributes array
+     * @return string
+     */
+    protected function longblob($name, $attributes = [])
+    {
+        $null = "NOT NULL";
+        if (array_key_exists('null', $attributes)) {
+            if ($attributes['null'] == true || $attributes['null'] == 'null') {
+                $null = "NULL";
+            }
+        }
+        return $this->fields[$name] = "{$name} LONGBLOB {$null}";
+    }
+
+
+
+    /*****************************************************************
+     * Integer Data Types
+     **/
+
+
+    /**
+     * @param $name
+     * @param $attributes array
      * @return string
      **/
-    private function parseIntType($name, $dataType, $length, $unique, $nullable)
+    protected function tinyint($name, $attributes = [])
     {
-        $length = (!is_null($length)) ? "($length)" : "";
-        $unique = (!is_null($unique)) ? ", UNIQUE($name)" : "";
+        return $this->fields[$name] = $this->parseDataType("TINYINT", $name, $attributes);
+    }
 
-        return "{$name} {$dataType}{$length} {$nullable}{$unique}";
+
+    /**
+     * @param $name
+     * @param $attributes array
+     * @return string
+     **/
+    protected function smallint($name, $attributes = [])
+    {
+        return $this->fields[$name] = $this->parseDataType("SMALLINT", $name, $attributes);
+    }
+
+
+    /**
+     * @param $name
+     * @param $attributes array
+     * @return string
+     **/
+    protected function mediumint($name, $attributes = [])
+    {
+        return $this->fields[$name] = $this->parseDataType("MEDIUMINT", $name, $attributes);
     }
 
     /**
      * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
+     * @param $attributes array
      * @return string
-     */
-    protected function smallInt($name, $length = null, $unique = null, $nullable = "NOT NULL")
+     **/
+    protected function int($name, $attributes = [])
     {
-        return $this->fields[$name] = $this->parseIntType($name, "SMALLINT", $length, $unique, $nullable);
+        return $this->fields[$name] = $this->parseDataType("INT", $name, $attributes);
     }
 
     /**
      * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
+     * @param $attributes array
      * @return string
-     */
-    protected function integer($name, $length = null, $unique = null, $nullable = "NOT NULL")
+     **/
+    protected function bigint($name, $attributes = [])
     {
-        return $this->fields[$name] = $this->parseIntType($name, "INTEGER", $length, $unique, $nullable);
+        return $this->fields[$name] = $this->parseDataType("BIGINT", $name, $attributes);
     }
 
     /**
      * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
+     * @param $attributes array
      * @return string
-     */
-    protected function mediumInt($name, $length = null, $unique = null, $nullable = "NOT NULL")
+     **/
+    protected function float($name, $attributes = [])
     {
-        return $this->fields[$name] = $this->parseIntType($name, "MEDIUMINT", $length, $unique, $nullable);
+        return $this->fields[$name] = $this->parseDataType("FLOAT", $name, $attributes);
+    }
+
+
+    /**
+     * @param $name
+     * @param $attributes array
+     * @return string
+     **/
+    protected function double($name, $attributes = [])
+    {
+        return $this->fields[$name] = $this->parseDataType("DOUBLE", $name, $attributes);
     }
 
     /**
      * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
+     * @param $attributes array
      * @return string
-     */
-    protected function bigInt($name, $length = null, $unique = null, $nullable = "NOT NULL")
+     **/
+    protected function decimal($name, $attributes = [])
     {
-        return $this->fields[$name] = $this->parseIntType($name, "BIGINT", $length, $unique, $nullable);
-    }
-
-    /**
-     * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
-     * @return string
-     */
-    protected function decimal($name, $length = null, $unique = null, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = $this->parseIntType($name, "DECIMAL", $length, $unique, $nullable);
-    }
-
-    /**
-     * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
-     * @return string
-     */
-    protected function float($name, $length = null, $unique = null, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = $this->parseIntType($name, "FLOAT", $length, $unique, $nullable);
-    }
-
-    /**
-     * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
-     * @return string
-     */
-    protected function double($name, $length = null, $unique = null, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = $this->parseIntType($name, "DOUBLE", $length, $unique, $nullable);
-    }
-
-    /**
-     * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
-     * @return string
-     */
-    protected function real($name, $length = null, $unique = null, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = $this->parseIntType($name, "REAL", $length, $unique, $nullable);
-    }
-
-    /**
-     * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
-     * @return string
-     */
-    protected function bit($name, $length = null, $unique = null, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = $this->parseIntType($name, "BIT", $length, $unique, $nullable);
-    }
-
-    /**
-     * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
-     * @return string
-     */
-    protected function boolean($name, $length = null, $unique = null, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = $this->parseIntType($name, "BOOLEAN", $length, $unique, $nullable);
-    }
-
-    /**
-     * @param $name
-     * @param null $length
-     * @param null $unique
-     * @param string $nullable
-     * @return string
-     */
-    protected function serial($name, $length = null, $unique = null, $nullable = "NOT NULL")
-    {
-        return $this->fields[$name] = $this->parseIntType($name, "SERIAL", $length, $unique, $nullable);
+        return $this->fields[$name] = $this->parseDataType("DECIMAL", $name, $attributes);
     }
 
 
@@ -410,8 +450,8 @@ abstract class Migration extends Connection
      *
      * @return array
      */
-    public function dictionary()
+    public function dump()
     {
-        return ($this->fields);
+        return dump($this->fields);
     }
 }

@@ -195,6 +195,25 @@ abstract class Form
 
 
     /**
+     * Returns a date form input
+     *
+     * @param $name
+     * @param null $value
+     * @param array $options
+     * @return string
+     */
+    public static function date($name, $value = null, $options = [])
+    {
+        $opts = self::evalOptions($options);
+        $field = (!empty(self::$fields)) ? " value='" . self::$fields->$name . "'" : '';
+        $value = (!is_null($value)) ? " value='" . $value . "'" : $field;
+
+        return "<input type='date' name='{$name}'{$value}{$opts}>\n";
+    }
+
+
+
+    /**
      * Returns a checkbox form input
      *
      * @param $name

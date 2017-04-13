@@ -26,7 +26,6 @@ class AuthController
         });
     }
 
-
     /**
      * Logout
      *
@@ -36,6 +35,4 @@ class AuthController
     {
         return Session::destroy();
     }
-
-
 }

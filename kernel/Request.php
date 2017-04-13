@@ -77,12 +77,17 @@ class Request implements RequestInterface
      * $request property that is set beforehand.
      *
      * @param $field
+     * @param $sanitized bool
      * @return string
      */
-    public function get($field)
+    public function get($field, $sanitized = true)
     {
         if (array_key_exists($field, $this->request)) {
-            return $this->sanitize($this->request[$field]);
+            if ($sanitized) {
+                return $this->sanitize($this->request[$field]);
+            } else {
+                return $this->request[$field];
+            }
         } else {
             return (null);
         }
@@ -138,13 +143,31 @@ class Request implements RequestInterface
             $field = array_keys($this->request);
             if (array_key_exists($field[$i], $this->rules)) {
                 $rule = explode('|', $this->rules[$field[$i]]);
+                $prefix = null;
+
+                foreach ($rule as $alias) {
+                    if (preg_match('/name\:/i', $alias)) {
+                        $prefix = (explode(':', $alias)[1]);
+                        break;
+                    }
+                }
+
                 for ($z = 0; $z < count($rule); $z++) {
+                    if (!$prefix) {
+                        $prefix = str_replace('_', ' ', $field[$i]);
+                    }
+
                     if ($rule[$z] == 'required') {
                         if (strlen($this->request[$field[$i]]) == 0) {
-                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . " is required.";
+                            $this->errors[$field[$i]] = $prefix . " is required.";
                             break;
                         }
                     }
+
+                    /**
+                     * Value should be unique in a field
+                     * on the database
+                     **/
                     if (preg_match('/unique/i', $rule[$z])) {
                         $db = new Database;
                         $value = $this->request[$field[$i]];
@@ -155,7 +178,7 @@ class Request implements RequestInterface
                             }
                         }
                         if ($db->table(explode(':', $rule[$z])[1])->where($field[$i], $value)->exists()) {
-                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . " not available.";
+                            $this->errors[$field[$i]] = $prefix . " not available.";
                             break;
                         }
                     }
@@ -173,35 +196,35 @@ class Request implements RequestInterface
                     }
                     if ($rule[$z] == 'letters') {
                         if (!preg_match('/^[A-Za-z]/i', $this->request[$field[$i]])) {
-                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . "  accepts letters only.";
+                            $this->errors[$field[$i]] = $prefix . " accepts letters only.";
                             break;
                         }
                     }
                     if ($rule[$z] == 'number' || $rule[$z] == 'numeric') {
                         if (!preg_match('/[0-9]/', $this->request[$field[$i]])) {
-                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . "  should be numeric.";
+                            $this->errors[$field[$i]] = $prefix . " should be numeric.";
                             break;
                         }
                     }
                     if (preg_match('/match/i', $rule[$z])) {
                         $compare = explode(':', $rule[$z])[1];
                         if ($this->request[$field[$i]] !== $this->request[$compare]) {
-                            $this->errors[$field[$i]] = "Field did not match to {$compare}.";
-                            $this->errors[$compare] = "Field did not match to {$field[$i]}.";
+                            $this->errors[$field[$i]] = $prefix . " Field did not match to {$compare}.";
+                            $this->errors[$compare] = " Field did not match to {$prefix}.";
                             break;
                         }
                     }
                     if (preg_match('/min/i', $rule[$z])) {
                         $min = explode(':', $rule[$z])[1];
                         if (strlen($this->request[$field[$i]]) < $min) {
-                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . " requires a minimum of {$min} characters.";
+                            $this->errors[$field[$i]] = $prefix . " requires a minimum of {$min} characters.";
                             break;
                         }
                     }
                     if (preg_match('/max/i', $rule[$z])) {
                         $max = explode(':', $rule[$z])[1];
                         if (strlen($this->request[$field[$i]]) > $max) {
-                            $this->errors[$field[$i]] = str_replace('_', ' ', $field[$i]) . " requires a maximum of {$max} characters.";
+                            $this->errors[$field[$i]] = $prefix . " requires a maximum of {$max} characters.";
                             break;
                         }
                     }

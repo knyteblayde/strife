@@ -26,8 +26,11 @@ class Auth
     public function guard()
     {
         if (!isset($_SESSION['user'])) {
+            $_SESSION['__INTENDED__'] = $_SERVER['REQUEST_URI'];
             return Route::redirect(route('login'));
         } else {
+            Session::remove('__INTENDED__');
+
             if (!Token::verify(Session::user()->remember_token)) {
                 return $this->restartSession();
             }

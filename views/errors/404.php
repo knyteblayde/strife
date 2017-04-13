@@ -4,7 +4,7 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', sans-serif, 'Helvetica Neue', Arial;
+            font-family: 'Segoe UI Light', sans-serif, 'Helvetica Neue', Arial;
             color: #555555;
             background: #f5f5f5
         }

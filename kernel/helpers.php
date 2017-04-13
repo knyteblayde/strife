@@ -146,6 +146,57 @@ if (!function_exists('route')) {
 }
 
 
+if (!function_exists('paths')) {
+    /**
+     * Alternative use of Route::paths()
+     * inherited the $routes array from
+     * Routes class.
+     *
+     * @return array
+     **/
+
+    function paths()
+    {
+        return Route::paths();
+    }
+}
+
+
+if (!function_exists('path')) {
+    /**
+     * Returns last URL processed.
+     *
+     * @return array
+     **/
+    function path()
+    {
+        if (isset($_SERVER['REQUEST_URI'])) {
+            return ($_SERVER['REQUEST_URI']);
+        } else {
+            return (null);
+        }
+    }
+}
+
+
+if (!function_exists('intended')) {
+    /**
+     * Returns last URL processed.
+     *
+     * @return array
+     **/
+
+    function intended()
+    {
+        if (isset($_SESSION['__INTENDED__'])) {
+            return ($_SESSION['__INTENDED__']);
+        } else {
+            return (null);
+        }
+    }
+}
+
+
 if (!function_exists('redirect')) {
     /**
      * Alternative to Route::redirect()
@@ -165,14 +216,14 @@ if (!function_exists('refresh')) {
     /**
      * Alternative to Route::redirect()
      *
-     * @param $seconds
+     * @param $interval
      * @param $route
      * @return string
      **/
 
-    function refresh($seconds, $route)
+    function refresh($interval, $route)
     {
-        return Route::refresh($seconds, $route);
+        return Route::refresh($interval, $route);
     }
 }
 
@@ -505,7 +556,7 @@ if (!function_exists('setflash')) {
 if (!function_exists('getflash')) {
 
     /**
-     * Get and destroy a flash messsage
+     * Get and destroy a flash message
      *
      * @param string $name
      * @return mixed

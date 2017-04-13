@@ -28,7 +28,12 @@ class LoginProcess
                 $user->remember_token = Token::create();
                 $user->save();
                 $_SESSION['user'] = $user();
-                return Route::redirect('welcome');
+
+                if (intended()) {
+                    return redirect(intended());
+                } else {
+                    Route::redirect(route('welcome'));
+                }
             } else {
                 Session::setFlash('flash', 'username/password is incorrect.<br><br>');
                 return $callback();

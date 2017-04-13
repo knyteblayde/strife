@@ -5,7 +5,7 @@
  *
  * @package Kernel
  */
-class Formatter
+class Format
 {
     /**
      * Fold or cuts the original to a given length.
@@ -13,17 +13,21 @@ class Formatter
      *
      * @param $text
      * @param $length
+     * @param $postfix
      * @return string
      */
-    static function enfold($text, $length)
+    static function fold($text, $length, $postfix = true)
     {
-        $prefix = "";
-        if (strlen($text) > $length) {
-            $prefix = "...";
-        }
-        $text = preg_replace('/\<img(.*)\>/i', '', $text);
+        $period = "";
 
-        return strip_tags(substr($text, 0, $length) . $prefix);
+        if ($postfix) {
+            if (strlen($text) > $length) {
+                $period = "...";
+            }
+        }
+
+        $text = substr($text, 0, $length);
+        return strip_tags($text) . $period;
     }
 
 
@@ -58,31 +62,37 @@ class Formatter
 
 
     /**
-     * Returns a sanitized and escaped text
+     * Returns a sanitized string
      *
      * @param $text
      * @return string
      */
 
-    static function parseStr($text)
+    static function sanitize($text)
     {
         $text = filter_var(htmlentities(strip_tags($text)), FILTER_SANITIZE_STRING);
-        return preg_replace('/[^A-Za-z0-9\-]/', ' ', $text);
+        return ($text);
     }
+
 
 
     /**
-     * Returns a sanitized and escaped text
+     * Returns a reversed string
      *
      * @param $text
      * @return string
      */
 
-    static function stripSpecialChars($text)
+    static function reverse($text)
     {
-        $text = filter_var(htmlentities(strip_tags($text)), FILTER_SANITIZE_STRING);
-        return preg_replace('/[^A-Za-z0-9\-]/', '', $text);
+        $string = "";
+        foreach (array_reverse(str_split($text, count($text))) as $c) {
+            $string .= $c;
+        }
+
+        return ($string);
     }
+
 
 
     /**
@@ -134,6 +144,7 @@ class Formatter
     {
         return strtolower($string);
     }
+
 
 
     /**

@@ -2,7 +2,8 @@
 
     <style type="text/css">
         body {
-            background: #1C2126;
+            font-family: "Segoe UI Light", "Segoe UI";
+            background: #ffffff;
             text-align: center;
         }
 
@@ -10,44 +11,33 @@
             margin-top: 15%;
         }
 
-        .quote {
+        .title {
             text-align: center;
             color: #ff2469;
-            font-size: 20px;
-            text-shadow: 0 2px 3px #000000
+            font-size: 28px;
+            margin: 0
         }
 
-        .quote small {
-            font-size: 14px;
-            color: #cccccc;
+        .sub {
+            margin: 0;
+            font-size: 15px;
+            color: #333333;
+            font-style: italic;
         }
 
         center {
-            font-size: 11px;
+            font-size: 12px;
             position: fixed;
-            bottom: 20px;
-            left: 40%;
-            right: 40%;
-            min-width: 100px;
+            bottom: 5px;
+            width: 100%;
+            color: #666666;
         }
     </style>
 
-    <img src="img/strife.png" width="200">
-    <p class="quote">
-        <?php
-        $quotes = [
-            '"Life is either you fall down and give up, or fall down and learn."',
-            '"Highly intelligent people don\'t die, they just go offline."',
-            '"Dreams don\'t come when we just dream of it, we must do."'
-        ]
-        ?>
-        {{$quotes[rand(0,2)]}}
-        <br>
-        <small>[ Strife Framework v2 build 88 - October 23, 2016 ]</small>
-    </p>
+    <img src="img/strife.png" width="120">
+    <p class="title">Strife Framework</p>
+    <p class="sub">"A Fast and Lightweight MVC Framework."</p>
 
-    <center>
-        &copy; 2016 Strife Framework. All rights reserved.
-    </center>
+    <center>&copy; 2017 Strife Framework. All rights reserved.</center>
 
 <?php endExtend() ?>

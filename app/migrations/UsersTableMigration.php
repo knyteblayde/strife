@@ -18,18 +18,25 @@ class UsersTableMigration extends Migration
     public function __construct()
     {
         $this->increments('id');
-        $this->varchar('firstname');
-        $this->varchar('lastname');
-        $this->char('username', 128, 'unique');
-        $this->char('password', 128, 'unique');
-        $this->char('email', 128, 'unique');
-        $this->varchar('number', 50);
-        $this->varchar('avatar', 255);
-        $this->varchar('role', 20);
-        $this->varchar('active', 20);
-        $this->varchar('date_added', 50);
-        $this->varchar('time_added', 50);
-        $this->char('remember_token', 32, null, 'null');
+        $this->varchar('firstname', [
+            'null' => true,
+        ]);
+        $this->varchar('lastname', [
+            'null' => true,
+        ]);
+        $this->char('username', [
+            'length' => 128,
+            'unique' => true,
+        ]);
+        $this->char('password', [
+            'length' => 128,
+            'unique' => true,
+        ]);
+        $this->varchar('remember_token', [
+            'null' => true
+        ]);
+        $this->varchar('created');
+        $this->varchar('updated');
     }
 
 

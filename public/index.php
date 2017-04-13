@@ -2,7 +2,7 @@
 
 /**
  * Strife
- * A Fast and Lightweight PHP MVC Framework
+ * A Fast and Lightweight MVC Framework
  *
  * Author:  Jeyz Strife
  * website: https://github.com/knyteblayde/strife
@@ -17,6 +17,6 @@ require_once '../vendor/autoload.php';
 
 
 /**
- * Boot up the front controller
+ * Boot up the Strife Engine
  */
 return new Kernel\Engine;

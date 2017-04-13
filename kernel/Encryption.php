@@ -10,25 +10,38 @@ class Encryption
     /**
      * In case you want to
      * use encryption to encoded/literal string.
+     * use levels to strengthen encryption
      *
-     * @param $data
+     * @param $data string
+     * @param $levels int
      * @return string
      **/
-    public static function encrypt($data)
+    public static function encode($data, $levels = 1)
     {
-        return base64_encode(serialize($data));
+        for($i = 0; $i < $levels; $i++) {
+            $data = base64_encode(serialize($data));
+        }
+
+        return ($data);
     }
 
 
     /**
      * Decrypting encrypted value
+     * It should match the encryption level
+     * used on encrypting the data
      *
-     * @param $data
+     * @param $data string
+     * @param $levels int
      * @return string
      **/
-    public static function decrypt($data)
+    public static function decode($data, $levels = 1)
     {
-        return unserialize(base64_decode($data, true));
+        for($i = 0; $i < $levels; $i++) {
+            $data = unserialize(base64_decode($data));
+        }
+
+        return ($data);
     }
 
 }

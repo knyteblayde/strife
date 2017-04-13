@@ -13,10 +13,11 @@ abstract class View
 
 
     /**
-     * Holds the layout's container folder to be used
-     * by end() method for including footer file.
+     * The default file type to be used
+     * on all template files.
+     * (defined on config/application.php)
      */
-    private static $postfix = '.php';
+    private static $postfix = TEMPLATE_TYPE;
 
     /**
      * Extends a view
@@ -34,7 +35,7 @@ abstract class View
 
     /**
      * Formatting the content by replacing any
-     * custom tags.
+     * custom tags by equivalent code in PHP
      *
      * @param $template
      * @param $_
@@ -50,7 +51,12 @@ abstract class View
             extract($_);
         }
 
-        $filename = '../views/' . preg_replace('/\.php$/', '', ltrim($template, '/')) . self::$postfix;
+        if (preg_match('/(.*)\.php/i', $template)) {
+            $filename = '../views/' . $template;
+        } else {
+            $filename = '../views/' . ltrim($template, '/') . self::$postfix;
+        }
+
 
         if (!file_exists($filename)) {
             trigger_error("File does not exist '{$filename}'", E_USER_ERROR);

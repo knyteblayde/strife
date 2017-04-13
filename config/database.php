@@ -3,7 +3,6 @@
 /**
  * Database Configuration
  */
-
 use Kernel\Database\Connection;
 
 

@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Kernel\Hash;
+use Kernel\Token;
 
 /**
  * Class UsersTableSeeder
@@ -20,13 +21,8 @@ class UsersTableSeeder
             'lastname' => 'Doe',
             'username' => 'username',
             'password' => Hash::encode('password'),
-            'email' => 'johndoe@mailserver.dev',
-            'number' => 010000040120,
-            'avatar' => 'default.jpg',
-            'role' => 'superadmin',
-            'active' => 'yes',
-            'date_added' => date_now(),
-            'time_added' => time_now(),
+            'created' => time(),
+            'updated' => time(),
         ]);
     }
 }

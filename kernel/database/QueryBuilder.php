@@ -78,7 +78,7 @@ interface QueryBuilderInterface
 
     public static function orWhereBetween($column, $first, $second);
 
-    public static function orderBy($field, $order);
+    public static function order($field, $order);
 
     public static function limit($number);
 
@@ -89,6 +89,14 @@ interface QueryBuilderInterface
     public static function lastRow();
 
     public static function firstRow();
+
+    public static function max($field);
+
+    public static function min($field);
+
+    public static function sum($field);
+
+    public static function avg($field);
 
     public static function pull($column);
 
@@ -117,7 +125,7 @@ interface QueryBuilderInterface
 
 use PDO;
 use PDOException;
-use Kernel\Formatter;
+use Kernel\Format;
 use Kernel\FileHandler;
 use Kernel\Exceptions\ExceptionMessages;
 use Kernel\Exceptions\InvalidMethodCallException;
@@ -283,11 +291,11 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
             $name = strtolower(preg_replace('/^pull/i', '', $name));
             return self::pull($name);
         } /**
-         * orderBy Method
+         * order Method
          */
-        elseif (preg_match('/^orderBy/i', $name)) {
-            $name = strtolower(preg_replace('/^orderBy/i', '', $name));
-            return self::orderBy($name, $arguments[0]);
+        elseif (preg_match('/^order/i', $name)) {
+            $name = strtolower(preg_replace('/^order/i', '', $name));
+            return self::order($name, $arguments[0]);
         } else {
             return false;
         }
@@ -448,7 +456,7 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
             if (empty($valuePairs)) {
                 return trigger_error("insert() expects one parameter, an array of key and value pairs.", E_USER_ERROR);
             }
-            $fields = trim(Formatter::arrayConcat(array_keys($valuePairs), ","), ',');
+            $fields = trim(Format::arrayConcat(array_keys($valuePairs), ","), ',');
             $values = "";
 
             /**
@@ -526,10 +534,13 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
                         $this->original->$field = self::find($this->original->id)->pull($field);
                     }
                 }
+                return true;
+            } else {
+                return false;
             }
             $this->fields = [];
         } else {
-            return (false);
+            return false;
         }
     }
 
@@ -550,7 +561,7 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
                 throw new InvalidMethodCallException(ExceptionMessages::EMPTY_VALUE);
             }
 
-            $params = trim(Formatter::arrayConcat(array_keys($valuePairs), '=?,'), ',');
+            $params = trim(Format::arrayConcat(array_keys($valuePairs), '=?,'), ',');
             $stmt = self::getInstance()->prepare("UPDATE " . static::$table . " SET {$params} WHERE id={$id}");
 
             return $stmt->execute(array_values($valuePairs));
@@ -810,15 +821,15 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
      * @return self
      * @throws InvalidMethodCallException
      */
-    public static function orderBy($field, $order)
+    public static function order($field, $order)
     {
         if (isset($order)) {
             if (!preg_match('/DESC/i', $order) && !preg_match('/ASC/i', $order)) {
-                return trigger_error("Second argument passed in orderBy() method should be 'ASC' or 'DESC'", E_USER_ERROR);
+                return trigger_error("Second argument passed to order() method should be 'ASC' or 'DESC'", E_USER_ERROR);
             }
         }
         self::$table = static::$table;
-        self::$query['orderBy'] = "ORDER BY $field " . strtoupper($order);
+        self::$query['order'] = "ORDER BY $field " . strtoupper($order);
 
         return new self;
     }
@@ -976,7 +987,7 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
 
 
     /**
-     * Return that last row on the database
+     * Return that first row on the database
      *
      * @return QueryBuilder
      */
@@ -990,6 +1001,110 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
 
             if ($result) {
                 return new self($result);
+            } else {
+                return (null);
+            }
+        } catch (PDOException $e) {
+            print $e->getMessage();
+        }
+    }
+
+
+
+    /**
+     * Returns the smallest value of a column
+     *
+     * @param $field
+     * @return QueryBuilder
+     */
+    public static function min($field)
+    {
+        try {
+            self::$table = static::$table;
+            $stmt = self::getInstance()->prepare("SELECT MIN({$field}) AS {$field} FROM " . static::$table . ";");
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if ($result) {
+                return ($result->{$field});
+            } else {
+                return (null);
+            }
+        } catch (PDOException $e) {
+            print $e->getMessage();
+        }
+    }
+
+
+
+    /**
+     * Returns the largest value of a column
+     *
+     * @param $field
+     * @return QueryBuilder
+     */
+    public static function max($field)
+    {
+        try {
+            self::$table = static::$table;
+            $stmt = self::getInstance()->prepare("SELECT MAX({$field}) AS {$field} FROM " . static::$table . ";");
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if ($result) {
+                return ($result->{$field});
+            } else {
+                return (null);
+            }
+        } catch (PDOException $e) {
+            print $e->getMessage();
+        }
+    }
+
+
+    /**
+     * Returns the sum of a column
+     *
+     * @param $field
+     * @return QueryBuilder
+     */
+    public static function sum($field)
+    {
+        try {
+            self::$table = static::$table;
+            $stmt = self::getInstance()->prepare("SELECT SUM({$field}) AS {$field} FROM " . static::$table . ";");
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if ($result) {
+                return ($result->{$field});
+            } else {
+                return (null);
+            }
+        } catch (PDOException $e) {
+            print $e->getMessage();
+        }
+    }
+
+
+
+
+    /**
+     * Returns the ave of a column
+     *
+     * @param $field
+     * @return QueryBuilder
+     */
+    public static function avg($field)
+    {
+        try {
+            self::$table = static::$table;
+            $stmt = self::getInstance()->prepare("SELECT AVG({$field}) AS {$field} FROM " . static::$table . ";");
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if ($result) {
+                return ($result->{$field});
             } else {
                 return (null);
             }
@@ -1193,7 +1308,7 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
      *
      * @var $selection
      * @var $whereStmt
-     * @var $orderBy
+     * @var $order
      * @var $limit
      * @return string
      */
@@ -1210,10 +1325,10 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
         }
 
         $whereStmt = (isset(self::$query['where'])) ? self::$query['where'] : '';
-        $orderBy = (isset(self::$query['orderBy'])) ? self::$query['orderBy'] : '';
+        $order = (isset(self::$query['order'])) ? self::$query['order'] : '';
         $limit = (isset(self::$query['limit'])) ? self::$query['limit'] : '';
 
-        return ("{$selection} FROM " . static::$table . " {$whereStmt} {$orderBy} {$limit}");
+        return ("{$selection} FROM " . static::$table . " {$whereStmt} {$order} {$limit}");
     }
 
 
@@ -1250,7 +1365,7 @@ class QueryBuilder extends Connection implements QueryBuilderInterface, QueryBui
             $values = "";
 
             foreach ($resource as $result) {
-                $values .= trim(Formatter::arrayConcat($result, $delimiter), $delimiter) . "{$separator}";
+                $values .= trim(Format::arrayConcat($result, $delimiter), $delimiter) . "{$separator}";
             }
 
             return trim($values, '|');

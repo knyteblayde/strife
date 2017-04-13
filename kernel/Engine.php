@@ -1,12 +1,13 @@
 <?php namespace Kernel;
 
-use View;
 
 /**
  * Setting and Dispatching routes
  * Class Engine
+ * Created 10/23/2015
+ * Updated 03/27/2017
  *
- * @package Kernel
+ * @package Kernel\Engine
  */
 class Engine
 {
@@ -81,12 +82,12 @@ class Engine
         /**
          * Return a service unavailable page(defined in config/application.php)
          */
-        if (MAINTENANCE_MODE === TRUE) {
-            return View::render('errors/503');
+        if (MAINTENANCE_MODE == TRUE) {
+            return \View::render('errors/503');
         }
 
         /**
-         * Get the sanitized url from private method getUrl()
+         * Get the sanitized url
          */
         $originalUrl = self::parseUrl();
         $compare = 0;
@@ -129,7 +130,7 @@ class Engine
                              * perform regex matching ignoring character casing.
                              */
 
-                            /** Escape regex keywords */
+                            /** Escape regex characters */
                             $key = preg_replace('/\[/', '\[', $url[$index]);
                             $key = preg_replace('/\]/', '\]', $key);
                             $key = preg_replace('/\(/', '\(', $key);
@@ -188,6 +189,78 @@ class Engine
         }
     }
 
+    /**
+     * Parse the URL if present.
+     *
+     * @return array
+     */
+    private static function parseUrl()
+    {
+        if (isset($_GET['url'])) {
+            $url = filter_var($_GET['url'], FILTER_SANITIZE_URL);
+            $url = explode('/', trim($url, '/'));
+        } else {
+            $url = array();
+        }
+
+        return ($url);
+    }
+
+    /**
+     * Instantiate the controller and call the method along
+     * with the parameters if present.
+     *
+     * @return mixed
+     */
+    private static function dispatch()
+    {
+        /**
+         * if request method is defined in a route config
+         * and is not equal to the current request method,
+         * return an error page.
+         */
+        if (!empty(self::$requestMethod)) {
+            if (strtoupper(self::$requestMethod) !== $_SERVER['REQUEST_METHOD']) {
+                return self::error();
+            }
+        }
+
+        /**
+         * Dispatch the controller class, prepend namespace if specified and pass
+         * in all possible arguments.
+         */
+        require_once '../app/controllers/' . self::$subdirectory . self::$controller . '.php';
+        $controller = self::$namespace . self::$controller;
+
+        return (call_user_func_array([new $controller(), self::$method], self::$parameters));
+    }
+
+    /**
+     * If non of the routes matched on the URL, return a 404 page.
+     *
+     * @return mixed
+     */
+    private static function error()
+    {
+        require_once '../views/errors/404.php';
+        return exit();
+    }
+
+    /**
+     * Replication of assign() method to
+     * set route to accept post request only
+     *
+     * @param string $name
+     * @param string $url
+     * @param string $action
+     * @param string $requestMethod
+     * @param string $namespace
+     * @return mixed
+     */
+    public static function post($name, $url, $action, $requestMethod = 'POST', $namespace = null)
+    {
+        return self::assign($name, $url, $action, $requestMethod, $namespace);
+    }
 
     /**
      * assign routes paths, names, controllers, etc.
@@ -260,30 +333,23 @@ class Engine
             self::$routes[$name]['subdirectory'] = "";
         }
 
-        return true;
+        return (true);
     }
 
-
     /**
-     * Replication of assign() method but
-     * sets route as a post request
+     * Return array containing all the routes and can be
+     * dumped to view those values.
      *
-     * @param string $name
-     * @param string $url
-     * @param string $action
-     * @param string $requestMethod
-     * @param string $namespace
-     * @return mixed
+     * @return array
      */
-    public static function post($name, $url, $action, $requestMethod = 'POST', $namespace = null)
+    public static function paths()
     {
-        return self::assign($name, $url, $action, $requestMethod, $namespace);
+        return (self::$routes);
     }
 
-
     /**
-     * Determine whether route matching should
-     * strict URL matching on character casing.
+     * Set whether strict URL matching on character casing
+     * should be performed
      *
      * @param $bool
      * @return bool
@@ -296,78 +362,5 @@ class Engine
             self::$strict = false;
         }
         return (true);
-    }
-
-
-    /**
-     * Return array containing all the routes and can be
-     * dumped to view those values.
-     *
-     * @var array $list
-     * @return array
-     */
-    public static function getList()
-    {
-        return (self::$routes);
-    }
-
-
-    /**
-     * Instantiate the controller and call the method along
-     * with the parameters if present.
-     *
-     * @return mixed
-     */
-    private static function dispatch()
-    {
-        /**
-         * if request method is defined in a route config
-         * and is not equal to the current request method,
-         * return an error page.
-         */
-        if (!empty(self::$requestMethod)) {
-            if (strtoupper(self::$requestMethod) !== $_SERVER['REQUEST_METHOD']) {
-                return self::error();
-            }
-        }
-
-        /**
-         * Dispatch the controller class, prepend namespace if specified and pass
-         * it all possible arguments.
-         */
-        require_once '../app/controllers/' . self::$subdirectory . self::$controller . '.php';
-        $controller = self::$namespace . self::$controller;
-
-        return (call_user_func_array([new $controller(), self::$method], self::$parameters));
-    }
-
-
-    /**
-     * If non of the routes matched on the URL, return a 404 page.
-     *
-     * @return mixed
-     */
-    private static function error()
-    {
-        require_once '../views/errors/404.php';
-        return exit();
-    }
-
-
-    /**
-     * Parse the URL if present.
-     *
-     * @return array
-     */
-    private static function parseUrl()
-    {
-        if (isset($_GET['url'])) {
-            $url = filter_var($_GET['url'], FILTER_SANITIZE_URL);
-            $url = explode('/', trim($url, '/'));
-        } else {
-            $url = array();
-        }
-
-        return ($url);
     }
 }

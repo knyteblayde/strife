@@ -16,8 +16,8 @@ class LoginRequest extends Request
      * Rules to be followed by request
      */
     protected $rules = [
-        'username' => 'required',
-        'password' => 'required'
+        'username' => 'name:Username|required',
+        'password' => 'name:Password|required'
     ];
 
 }

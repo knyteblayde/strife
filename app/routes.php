@@ -6,6 +6,7 @@
 assign('homepage', '/', 'HomeController::index()');
 assign('welcome', '/welcome', '/cms/WelcomeController::index()');
 
+
 /**
  * Authentication routes
  */
