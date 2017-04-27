@@ -1,4 +1,4 @@
-<?php namespace Kernel;
+<?php namespace Kernel\Security;
 
 /**
  * Class Token

@@ -83,7 +83,7 @@ class Session
      * remove all flash messages if parameter is null
      *
      * @param $name
-     * @return bool
+     * @return mixed
      */
     public static function unsetFlash($name = null)
     {
@@ -94,7 +94,7 @@ class Session
             }
         } elseif (isset($_SESSION['__FLASH__'][$name])) {
             unset($_SESSION['__FLASH__'][$name]);
-            return;
+            return (true);
         } else {
             return (false);
         }
@@ -121,7 +121,7 @@ class Session
     /**
      * Flush all sessions except session_id
      *
-     * @return view
+     * @return mixed
      */
     public static function destroy()
     {
@@ -129,7 +129,7 @@ class Session
         session_destroy();
         session_regenerate_id();
 
-        return header('location: ' . route('login'));
+        header('location: ' . route('login'));
     }
 
 }

@@ -21,7 +21,7 @@ class AuthController
     public function attempt()
     {
         $login = new LoginProcess;
-        return $login->execute(function(){
+        return $login->execute(function () {
             return Route::redirect('login');
         });
     }

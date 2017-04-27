@@ -1,5 +1,5 @@
 <?php
-use Kernel\Token;
+use Kernel\Security\Token;
 
 /**
  * Class Auth

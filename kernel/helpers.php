@@ -7,7 +7,6 @@
  * simple tasks.
  **/
 
-
 if (!function_exists('dump')) {
     /**
      * Spit and Stop
@@ -261,7 +260,7 @@ if (!function_exists('extend')) {
 }
 
 
-if (!function_exists('endExtend')) {
+if (!function_exists('stop')) {
     /**
      * End an extended layout
      *
@@ -269,9 +268,9 @@ if (!function_exists('endExtend')) {
      * @return string
      **/
 
-    function endExtend($params = [])
+    function stop($params = [])
     {
-        return View::endExtend($params);
+        return View::stop($params);
     }
 }
 
@@ -291,7 +290,7 @@ if (!function_exists('parse')) {
 }
 
 
-if (!function_exists('get_filename')) {
+if (!function_exists('filename')) {
     /**
      * Returns a string(without extension)
      * of a given string variable
@@ -300,14 +299,14 @@ if (!function_exists('get_filename')) {
      * @return string
      **/
 
-    function get_filename($string_var)
+    function filename($string_var)
     {
         return pathinfo($string_var, PATHINFO_FILENAME);
     }
 }
 
 
-if (!function_exists('get_extension')) {
+if (!function_exists('extension')) {
     /**
      * Returns an extension of a
      * given string variable
@@ -316,7 +315,7 @@ if (!function_exists('get_extension')) {
      * @return string
      **/
 
-    function get_extension($string_var)
+    function extension($string_var)
     {
         return pathinfo($string_var, PATHINFO_EXTENSION);
     }
@@ -527,7 +526,7 @@ if (!function_exists('page_error')) {
 }
 
 
-use Kernel\Hash;
+use Kernel\Security\Hash;
 
 if (!function_exists('hash_encode')) {
 

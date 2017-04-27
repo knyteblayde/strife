@@ -1,13 +1,15 @@
-<?php namespace Kernel;
+<?php namespace Kernel\Requests;
 
 use Kernel\Database\Database;
+use Kernel\Security\Hash;
+use Kernel\Security\Token;
 
 /**
  * Interface RequestInterface
  *
  * @package Kernel
  */
-interface RequestInterface
+interface HTTPRequestInterface
 {
     public function __construct($request);
 
@@ -29,7 +31,7 @@ interface RequestInterface
  *
  * @package Kernel
  */
-class Request implements RequestInterface
+class HTTPRequest implements HTTPRequestInterface
 {
     /**
      * Storage for request method
@@ -114,7 +116,7 @@ class Request implements RequestInterface
      */
     public function retain()
     {
-        $_SESSION['__FIELDS__'] = $this->request;
+        return ($_SESSION['__FIELDS__'] = $this->request);
     }
 
 
@@ -241,11 +243,11 @@ class Request implements RequestInterface
         }
         $redirectRoute = (!is_null($route)) ? $route : $this->route;
         if (is_null($this->errors)) {
-            return true;
+            return (true);
         } else {
             $_SESSION['__ERRORS__'] = $this->errors;
             $_SESSION['__FIELDS__'] = $this->request;
-            return header("location: {$redirectRoute}");
+            header("location: {$redirectRoute}");
         }
     }
 }

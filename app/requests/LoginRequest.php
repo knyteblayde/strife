@@ -1,8 +1,8 @@
 <?php namespace App\Requests;
 
-use Kernel\Request;
+use Kernel\Requests\HTTPRequest;
 
-class LoginRequest extends Request
+class LoginRequest extends HTTPRequest
 {
 
     /**

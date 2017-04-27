@@ -1,6 +1,6 @@
 <?php
 
-use Kernel\Token;
+use Kernel\Security\Token;
 
 /**
  * Form class includes html form inputs,
@@ -117,7 +117,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? " value='" . self::$fields->$name . "'" : '';
         $value = (!is_null($value)) ? " value='" . $value . "'" : $field;
 
-        return "<input type='text' name='{$name}'{$value}{$opts}>\n";
+        return "<input type='text' name='{$name}' {$value} {$opts}>\n";
     }
 
 
@@ -136,7 +136,7 @@ abstract class Form
         $opts = self::evalOptions($options);
         $value = (!is_null($value)) ? " value='" . $value . "'" : '';
 
-        return "<input type='password' name='{$name}'{$value}{$opts}>\n";
+        return "<input type='password' name='{$name}' {$value} {$opts}>\n";
     }
 
 
@@ -154,7 +154,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? self::$fields->$name : '';
         $value = (!is_null($value)) ? $value : $field;
 
-        return "<textarea name='{$name}'{$opts}>{$value}</textarea>\n";
+        return "<textarea name='{$name}' {$opts}>{$value}</textarea>\n";
     }
 
 
@@ -172,7 +172,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? " value='" . self::$fields->$name . "'" : '';
         $value = (!is_null($value)) ? " value='" . $value . "'" : $field;
 
-        return "<input type='email' name='{$name}'{$value}{$opts}>\n";
+        return "<input type='email' name='{$name}' {$value} {$opts}>\n";
     }
 
 
@@ -190,7 +190,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? " value='" . self::$fields->$name . "'" : '';
         $value = (!is_null($value)) ? " value='" . $value . "'" : $field;
 
-        return "<input type='number' name='{$name}'{$value}{$opts}>\n";
+        return "<input type='number' name='{$name}' {$value} {$opts}>\n";
     }
 
 
@@ -208,7 +208,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? " value='" . self::$fields->$name . "'" : '';
         $value = (!is_null($value)) ? " value='" . $value . "'" : $field;
 
-        return "<input type='date' name='{$name}'{$value}{$opts}>\n";
+        return "<input type='date' name='{$name}' {$value} {$opts}>\n";
     }
 
 
@@ -227,7 +227,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? self::$fields->$name : '';
         $value = (!is_null($value)) ? " value='" . $value . "'" : $field;
 
-        return "<input type='checkbox' name='{$name}'{$value}{$opts}>";
+        return "<input type='checkbox' name='{$name}' {$value} {$opts}>";
     }
 
 
@@ -245,7 +245,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? self::$fields->$name : '';
         $value = (!is_null($value)) ? " value='" . $value . "'" : $field;
 
-        return "<input type='radio' name='{$name}'{$value}{$opts}>";
+        return "<input type='radio' name='{$name}' {$value} {$opts}>";
     }
 
 
@@ -263,7 +263,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? " value='" . self::$fields->$name . "'" : '';
         $value = (!empty($value)) ? " value='" . $value . "'" : $field;
 
-        return "<input type='hidden' name='{$name}'{$value}{$opts}>\n";
+        return "<input type='hidden' name='{$name}' {$value} {$opts}>\n";
     }
 
 
@@ -281,7 +281,7 @@ abstract class Form
         $field = (!empty(self::$fields)) ? " value='" . self::$fields->$name . "'" : '';
         $value = (!is_null($value)) ? " value='" . $value . "'" : $field;
 
-        return "<input{$value} type='file' name='{$name}'{$opts}>\n";
+        return "<input{$value} type='file' name='{$name}' {$opts}>\n";
     }
 
 
@@ -298,7 +298,7 @@ abstract class Form
         $opts = self::evalOptions($options);
         $value = !empty($value) ? " value='" . $value . "'" : '';
 
-        return "<input type='submit' name='{$name}'{$value}{$opts}>\n";
+        return "<input type='submit' name='{$name}' {$value} {$opts}>\n";
     }
 
 
@@ -315,7 +315,7 @@ abstract class Form
         $opts = self::evalOptions($options);
         $value = is_null($value) ? $name : $value;
 
-        return "<button name='{$name}'{$opts}>{$value}</button>\n";
+        return "<button name='{$name}' {$opts}>{$value}</button>\n";
     }
 
 
@@ -346,6 +346,6 @@ abstract class Form
             $value .= "<option value='{$index}'>{$optionValue}</option>\n";
         }
 
-        return "<select name='{$name}'{$opts}>{$value}</select>\n";
+        return "<select name='{$name}' {$opts}>{$value}</select>\n";
     }
 }

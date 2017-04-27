@@ -10,8 +10,8 @@ use Kernel\Database\Connection;
  * Here you can specify multiple database
  * connections by giving an alias.
  *
- * first param is the alias for the connection instance
- * second param is an array of connection parameters
+ * argument 1 is the alias for the connection instance
+ * argument 2 is an array of connection parameters
  */
 Connection::parameters('conn1',[
     'driver'   => 'mysql',
@@ -27,4 +27,4 @@ Connection::parameters('conn1',[
 /**
  * Begin Transaction with database
  */
-//Connection::initialize('conn1');
+Connection::initialize('conn1');

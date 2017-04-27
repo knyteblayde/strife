@@ -32,7 +32,7 @@ class Connection
      *
      * @return mixed
      **/
-    public static function getInstance()
+    public static function instance()
     {
         if (is_null(self::$pdo)) {
             return user_error('Connection is not initialized.', E_USER_ERROR);

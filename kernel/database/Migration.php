@@ -59,6 +59,8 @@ abstract class Migration extends Connection
 
         if ($type == 'INT') {
             $attr['length'] = 11;
+        } elseif ($type == 'TINYINT') {
+            $attr['length'] = 4;
         }
         elseif ($type == 'DECIMAL') {
             $attr['length'] = 30;

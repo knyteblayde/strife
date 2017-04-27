@@ -1,10 +1,21 @@
 <?php
+use App\Models\User;
+
 
 /**
  * List of route paths
  */
 assign('homepage', '/', 'HomeController::index()');
 assign('welcome', '/welcome', '/cms/WelcomeController::index()');
+
+assign('test', '/test', function () {
+
+    $usr = User::get();
+
+    dump($usr);
+
+
+});
 
 
 /**

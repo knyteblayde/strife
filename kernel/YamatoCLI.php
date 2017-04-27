@@ -1,6 +1,8 @@
 <?php namespace Kernel;
 
 use DirectoryIterator;
+use Kernel\Security\Encryption;
+use Kernel\Security\Hash;
 
 /**
  * Class YamatoCLI
@@ -140,7 +142,7 @@ EOF;
             case 'create:controller':
                 if (isset($cmd[2])) {
                     $option = isset($cmd[3]) ? $cmd[3] : null;
-                    return $this->createController($cmd[2], $option);
+                    $this->createController($cmd[2], $option);
                 } else {
                     die("too few arguments, create:controller expects [name], [empty] is optional");
                 }
@@ -148,7 +150,7 @@ EOF;
 
             case 'create:migration':
                 if (isset($cmd[2]) && isset($cmd[3])) {
-                    return $this->createMigration($cmd[2], $cmd[3]);
+                    $this->createMigration($cmd[2], $cmd[3]);
                 } else {
                     die("too few arguments, create:migration expects [name] [table]");
                 }
@@ -156,7 +158,7 @@ EOF;
 
             case 'create:request':
                 if (isset($cmd[2])) {
-                    return $this->createRequest($cmd[2]);
+                    $this->createRequest($cmd[2]);
                 } else {
                     die("create:request expects 1 parameter [name]");
                 }
@@ -164,7 +166,7 @@ EOF;
 
             case 'create:process':
                 if (isset($cmd[2])) {
-                    return $this->createProcess($cmd[2]);
+                    $this->createProcess($cmd[2]);
                 } else {
                     die("create:process expects parameter [name]");
                 }
@@ -172,7 +174,7 @@ EOF;
 
             case 'create:seeder':
                 if (isset($cmd[2]) && isset($cmd[3])) {
-                    return $this->createSeeder($cmd[2], $cmd[3]);
+                    $this->createSeeder($cmd[2], $cmd[3]);
                 } else {
                     die("too few arguments, create:seeder expects [name] [table]");
                 }
@@ -265,6 +267,8 @@ EOF;
                 die("error: unknown command '{$cmd[1]}' read documentation for info.");
                 break;
         }
+
+        return (true);
     }
 
 
@@ -558,9 +562,9 @@ EOF;
         $data = <<<EOF
 <?php namespace App\Requests;
 
-use Kernel\Request;
+use Kernel\Requests\HTTPRequest;
 
-class {$name} extends Request
+class {$name} extends HTTPRequest
 {
 
     /**

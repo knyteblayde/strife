@@ -43,12 +43,12 @@ class Cookie
      * Unset a cookie
      *
      * @param $name
-     * @return view
+     * @return mixed
      */
     public static function destroy($name)
     {
         if (isset($_COOKIE[$name])) {
-            setcookie($name, "", time() - 3600);
+            return setcookie($name, "", time() - 3600);
         } else {
             return false;
         }
@@ -58,7 +58,7 @@ class Cookie
     /**
      * Flush all Cookies
      *
-     * @return view
+     * @return mixed
      */
     public static function flush()
     {

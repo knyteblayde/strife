@@ -16,7 +16,7 @@
     "classmap": [
       "kernel",
       "kernel/database",
-      "kernel/exceptions",
+      "kernel/security",
       "app/models",
       "app/seeders",
       "app/requests",

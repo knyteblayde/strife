@@ -1,9 +1,9 @@
 <?php
 
-use Kernel\Hash;
-use Kernel\Token;
 use App\Models\User;
 use App\Requests\LoginRequest;
+use Kernel\Security\Hash;
+use Kernel\Security\Token;
 
 class LoginProcess
 {

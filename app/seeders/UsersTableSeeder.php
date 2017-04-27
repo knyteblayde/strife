@@ -1,8 +1,7 @@
 <?php namespace App\Seeders;
 
 use App\Models\User;
-use Kernel\Hash;
-use Kernel\Token;
+use Kernel\Security\Hash;
 
 /**
  * Class UsersTableSeeder

@@ -9,7 +9,7 @@ abstract class View
      * Holds the layout's container folder to be used
      * by end() method for including footer file.
      */
-    private static $layoutFolderName = '';
+    private static $layout = null;
 
 
     /**
@@ -19,19 +19,6 @@ abstract class View
      */
     private static $postfix = TEMPLATE_TYPE;
 
-    /**
-     * Extends a view
-     *
-     * @param $layoutFolderName
-     * @param $var
-     * @return self::render
-     */
-    public static function extend($layoutFolderName, $var = [])
-    {
-        self::$layoutFolderName = trim(str_replace('header', '', $layoutFolderName), '/');
-
-        return self::render(self::$layoutFolderName . '/header', $var);
-    }
 
     /**
      * Formatting the content by replacing any
@@ -51,18 +38,22 @@ abstract class View
             extract($_);
         }
 
-        if (preg_match('/(.*)\.php/i', $template)) {
+        if (preg_match('/(.*)\.' . self::$postfix . '/i', $template)) {
             $filename = '../views/' . $template;
         } else {
             $filename = '../views/' . ltrim($template, '/') . self::$postfix;
         }
 
-
         if (!file_exists($filename)) {
             trigger_error("File does not exist '{$filename}'", E_USER_ERROR);
         }
-        
+
         $___ = file_get_contents($filename);
+        $___ = preg_replace('/\@extend\((.*)\)/', '<?php View::extend($1) ?>', $___);
+        $___ = preg_replace('/\@stop\((.*)\)/', '<?php View::stop($1) ?>', $___);
+        $___ = preg_replace('/\@parse\((.*)\)/', '<?php View::parse($1) ?>', $___);
+        $___ = preg_replace('/\@get\((.*)\)/', '<?php View::get($1) ?>', $___);
+        $___ = preg_replace('/\@import\((.*)\)/', '<?php use $1 ?>', $___);
         $___ = preg_replace('/\{\{(.*)\}\}$/', '<?php echo htmlentities($1) ?>', $___);
         $___ = preg_replace('/\{\{/', '<?php echo htmlentities($1', $___);
         $___ = preg_replace('/\}\}/', ') ?>', $___);
@@ -72,10 +63,13 @@ abstract class View
         $___ = preg_replace('/\\\{\\\{/', '{{', $___);
         $___ = preg_replace('/\\\}\\\}/', '}}', $___);
         $___ = preg_replace('/\{if (.*)\}/', '<?php if ($1) : ?>', $___);
+        $___ = preg_replace('/\{elseif (.*)\}/', '<?php elseif ($1) : ?>', $___);
         $___ = preg_replace('/\{else\}/', '<?php else : ?>', $___);
         $___ = preg_replace('/\{endif\}/', '<?php endif ?>', $___);
         $___ = preg_replace('/\{for (.*)\}/', '<?php for ($1) : ?>', $___);
         $___ = preg_replace('/\{endfor\}/', '<?php endfor ?>', $___);
+        $___ = preg_replace('/\{do\}/', '<?php do { ?>', $___);
+        $___ = preg_replace('/\{until (.*)\}/', '<?php } while($1) ?>', $___);
         $___ = preg_replace('/\{while (.*)\}/', '<?php while ($1) : ?>', $___);
         $___ = preg_replace('/\{endwhile\}/', '<?php endwhile ?>', $___);
         $___ = preg_replace('/\{foreach (.*)\}/', '<?php foreach ($1) : ?>', $___);
@@ -84,20 +78,37 @@ abstract class View
         return eval(' ?>' . $___ . '<?php ');
     }
 
+
+    /**
+     * Extends a view
+     *
+     * @param $layout
+     * @param $var
+     * @return self::render
+     */
+    public static function extend($layout, $var = [])
+    {
+        self::$layout = trim($layout, '/');
+
+        return self::render(self::$layout . '/header', $var);
+    }
+
+
     /**
      * Require a footer file.
      *
      * @param $var
      * @return self::render
      */
-    public static function endExtend($var = [])
+    public static function stop($var = [])
     {
-        return self::render(self::$layoutFolderName . '/footer', $var);
+        return self::render(self::$layout . '/footer', $var);
     }
 
 
     /**
      * Include a file and render custom tags.
+     * similar to render
      *
      * @param $template
      * @param $var
@@ -118,13 +129,12 @@ abstract class View
      */
     public static function get($template)
     {
-        $filename = '../views/' . $template . self::$postfix;
-
-        if (!file_exists($filename)) {
-            trigger_error("File does not exist '{$filename}'", E_USER_ERROR);
+        if (preg_match('/(.*)\.' . self::$postfix . '/i', $template)) {
+            $filename = '../views/' . $template;
+        } else {
+            $filename = '../views/' . $template . self::$postfix;
         }
 
-        return include ("$filename");
+        return include("$filename");
     }
-
 }
