@@ -28,7 +28,7 @@ define('TEMPLATE_TYPE', '.php');
  * Change this key before
  * deployment of this system.
  */
-define('APPLICATION_KEY', '8dsp0mvsekyf4mzjuu4deu8xvsc63bekjnihrh7o44sesl5sez');
+define('APPLICATION_KEY', 'ds9o1xikuloa72olrqggqldj11ka9e9hxusnunow996rpndlyl');
 
 
 
@@ -36,6 +36,12 @@ define('APPLICATION_KEY', '8dsp0mvsekyf4mzjuu4deu8xvsc63bekjnihrh7o44sesl5sez');
  * You can quickly switch to Maintenance mode.
  */
 define('MAINTENANCE_MODE', FALSE);
+
+
+/**
+ * Allow blocking for IPs.
+ */
+define('IP_BLACKLISTING', FALSE);
 
 
 

@@ -83,8 +83,17 @@ class Engine
          * Return a service unavailable page(defined in config/application.php)
          */
         if (MAINTENANCE_MODE == TRUE) {
-            return \View::render('errors/503');
+            return self::error(503);
         }
+
+
+        /**
+         * If blacklisting is on, deny access to resources
+         */
+        if (IP_BLACKLISTING == TRUE) {
+            self::blacklist();
+        }
+
 
         /**
          * Get the sanitized url
@@ -161,7 +170,7 @@ class Engine
                              */
                             if (!empty($route['requestMethod'])) {
                                 if (strtoupper($route['requestMethod']) !== $_SERVER['REQUEST_METHOD']) {
-                                    return self::error();
+                                    return self::error(404);
                                 }
                             }
                             return call_user_func_array($route['closure'], $params);
@@ -185,7 +194,7 @@ class Engine
              * Return 404 error page
              * if all fails.
              */
-            return self::error();
+            return self::error(404);
         }
     }
 
@@ -221,7 +230,7 @@ class Engine
          */
         if (!empty(self::$requestMethod)) {
             if (strtoupper(self::$requestMethod) !== $_SERVER['REQUEST_METHOD']) {
-                return self::error();
+                return self::error(404);
             }
         }
 
@@ -238,13 +247,33 @@ class Engine
     /**
      * If non of the routes matched on the URL, return a 404 page.
      *
+     * @param $n
      * @return mixed
      */
-    private static function error()
+    private static function error($n)
     {
-        require_once '../views/errors/404.php';
-        return exit();
+        return page_error($n);
     }
+
+
+    /**
+     * Block IPs listed on .blacklist file.
+     *
+     * @return mixed
+     */
+    private static function blacklist()
+    {
+        $ips = file_contents_to_array('../.blacklist');
+
+        foreach ($ips as $ip) {
+            if (remote_ip() == $ip) {
+                return self::error(403);
+            } else {
+                continue;
+            }
+        }
+    }
+
 
     /**
      * Replication of assign() method to

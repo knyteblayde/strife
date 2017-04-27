@@ -25,19 +25,20 @@
             font-size: 32px;
             line-height: 0;
         }
+
         p {
             margin: 0
         }
     </style>
-    <title>404 - Page Not Found!</title>
+    <title>403 - Access Forbidden!</title>
 </head>
 <body>
 <div class="wrapper">
-    <h1>404
-        <small>Page Not Found :(</small>
+    <h1>403
+        <small>Access Forbidden</small>
     </h1>
     <br>
-    <p>The page you requested was not found, click <a href="/">here</a> to go back.</p>
+    <p>Access to this resource on the server is denied, contact system administrator.</p>
 </div>
 </body>
 </html>

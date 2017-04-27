@@ -468,6 +468,65 @@ if (!function_exists('year_now')) {
     }
 }
 
+
+if (!function_exists('remote_ip')) {
+    /**
+     * Return current client IP
+     *
+     * @return string
+     */
+    function remote_ip()
+    {
+        $ip = null;
+
+        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED'];
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        } else {
+            $ip = null;
+        }
+
+        return ($ip);
+    }
+}
+
+
+if (!function_exists('remote_port')) {
+    /**
+     * Return remote port
+     *
+     * @return string
+     */
+    function remote_port()
+    {
+        return $_SERVER['REMOTE_PORT'];
+    }
+}
+
+
+
+if (!function_exists('page_error')) {
+    /**
+     * Custom error pages
+     *
+     * @param $n
+     * @return string
+     */
+    function page_error($n)
+    {
+        include("../views/errors/{$n}.php");
+        return exit();
+    }
+}
+
+
 use Kernel\Hash;
 
 if (!function_exists('hash_encode')) {

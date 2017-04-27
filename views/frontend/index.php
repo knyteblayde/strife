@@ -36,7 +36,7 @@
 
     <img src="img/strife.png" width="120">
     <p class="title">Strife Framework</p>
-    <p class="sub">"A Fast and Lightweight MVC Framework."</p>
+    <p class="sub">A Fast and Lightweight PHP MVC Framework.</p>
 
     <center>&copy; 2017 Strife Framework. All rights reserved.</center>
 
