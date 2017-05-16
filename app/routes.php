@@ -1,26 +1,15 @@
 <?php
-use App\Models\User;
-
 
 /**
  * List of route paths
  */
-assign('homepage', '/', 'HomeController::index()');
-assign('welcome', '/welcome', '/cms/WelcomeController::index()');
-
-assign('test', '/test', function () {
-
-    $usr = User::get();
-
-    dump($usr);
-
-
-});
+assign('homepage ->> /', 'HomeController::index');
+assign('welcome  ->> /welcome', '/cms/WelcomeController::index');
 
 
 /**
  * Authentication routes
  */
-assign('login', '/login', 'AuthController::index()');
-post('attempt', '/attempt', 'AuthController::attempt()');
-assign('logout', '/logout', 'AuthController::logout()');
+assign('auth.login  ->> /login', 'AuthController::index');
+post('auth.attempt  ->> /attempt', 'AuthController::attempt');
+assign('auth.logout ->> /logout', 'AuthController::logout');

@@ -15,11 +15,15 @@ class ComposerStaticInit713e105862dfd52d71a5066e67b91d37
 
     public static $classMap = array (
         'App\\Migrations\\UsersTableMigration' => __DIR__ . '/../..' . '/app/migrations/UsersTableMigration.php',
+        'App\\Models\\City' => __DIR__ . '/../..' . '/app/models/City.php',
+        'App\\Models\\Country' => __DIR__ . '/../..' . '/app/models/Country.php',
+        'App\\Models\\Language' => __DIR__ . '/../..' . '/app/models/Language.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/models/User.php',
         'App\\Requests\\LoginRequest' => __DIR__ . '/../..' . '/app/requests/LoginRequest.php',
         'App\\Seeders\\UsersTableSeeder' => __DIR__ . '/../..' . '/app/seeders/UsersTableSeeder.php',
         'Auth' => __DIR__ . '/../..' . '/kernel/security/Auth.php',
         'Cookie' => __DIR__ . '/../..' . '/kernel/security/Cookie.php',
+        'ErrorHandler' => __DIR__ . '/../..' . '/kernel/ErrorHandler.php',
         'Form' => __DIR__ . '/../..' . '/kernel/Form.php',
         'Kernel\\Database\\Connection' => __DIR__ . '/../..' . '/kernel/database/Connection.php',
         'Kernel\\Database\\Database' => __DIR__ . '/../..' . '/kernel/database/Database.php',
@@ -40,7 +44,6 @@ class ComposerStaticInit713e105862dfd52d71a5066e67b91d37
         'Kernel\\Security\\Token' => __DIR__ . '/../..' . '/kernel/security/Token.php',
         'Kernel\\YamatoCLI' => __DIR__ . '/../..' . '/kernel/YamatoCLI.php',
         'LoginProcess' => __DIR__ . '/../..' . '/app/processes/LoginProcess.php',
-        'NiggaProcess' => __DIR__ . '/../..' . '/app/processes/NiggaProcess.php',
         'Route' => __DIR__ . '/../..' . '/kernel/Route.php',
         'Session' => __DIR__ . '/../..' . '/kernel/security/Session.php',
         'View' => __DIR__ . '/../..' . '/kernel/View.php',

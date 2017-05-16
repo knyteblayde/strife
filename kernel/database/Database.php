@@ -1,7 +1,7 @@
 <?php namespace Kernel\Database;
 
-use PDOException;
 use PDO;
+use PDOException;
 
 /**
  * Database raw query builder.
@@ -25,7 +25,7 @@ class Database extends QueryBuilder
      */
     public static function query($query)
     {
-        $stmt = self::getInstance()->query($query);
+        $stmt = self::instance()->query($query);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
@@ -55,7 +55,7 @@ class Database extends QueryBuilder
     public static function create($database)
     {
         try {
-            return self::getInstance()->exec("CREATE DATABASE {$database}");
+            return self::instance()->exec("CREATE DATABASE {$database}");
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -74,7 +74,7 @@ class Database extends QueryBuilder
     public static function drop($database)
     {
         try {
-            return self::getInstance()->exec("DROP DATABASE {$database}");
+            return self::instance()->exec("DROP DATABASE {$database}");
         } catch (PDOException $e) {
             return print $e->getMessage();
         }

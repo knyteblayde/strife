@@ -564,16 +564,15 @@ if (!function_exists('assign')) {
      * Assign a route config.
      * same as Route::assign() method.
      *
-     * @param string $name
      * @param string $url
      * @param string $action
      * @param null $requestMethod
      * @param null $namespace
      * @return mixed
      */
-    function assign($name, $url, $action, $requestMethod = null, $namespace = null)
+    function assign($url, $action, $requestMethod = null, $namespace = null)
     {
-        return Route::assign($name, $url, $action, $requestMethod, $namespace);
+        return Route::assign($url, $action, $requestMethod, $namespace);
     }
 }
 
@@ -583,16 +582,15 @@ if (!function_exists('post')) {
      * Assign a POST request route
      * that accepts POST request method.
      *
-     * @param string $name
      * @param string $url
      * @param string $action
      * @param string $requestMethod
      * @param null $namespace
      * @return mixed
      */
-    function post($name, $url, $action, $requestMethod = 'POST', $namespace = null)
+    function post($url, $action, $requestMethod = 'POST', $namespace = null)
     {
-        return Route::post($name, $url, $action, $requestMethod, $namespace);
+        return Route::post($url, $action, $requestMethod, $namespace);
     }
 }
 

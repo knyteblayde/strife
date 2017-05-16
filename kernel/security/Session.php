@@ -98,6 +98,7 @@ class Session
         } else {
             return (false);
         }
+        return (true);
     }
 
 
@@ -129,7 +130,6 @@ class Session
         session_destroy();
         session_regenerate_id();
 
-        header('location: ' . route('login'));
+        header('location: ' . route('auth.login'));
     }
-
 }

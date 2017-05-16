@@ -16,7 +16,7 @@
         <br>
         <br>
         <div class="well">
-            {!Form::open(route('attempt'))!}
+            {!Form::open(route('auth.attempt'))!}
             <h3 class="help-block text-center"><b>LOGIN</b></h3>
             <hr>
             <div class="form-group{{!empty(errors('username')) ? ' has-error':''}}">

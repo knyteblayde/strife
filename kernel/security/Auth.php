@@ -27,7 +27,7 @@ class Auth
     {
         if (!isset($_SESSION['user'])) {
             $_SESSION['__INTENDED__'] = $_SERVER['REQUEST_URI'];
-            return Route::redirect(route('login'));
+            return Route::redirect(route('auth.login'));
         } else {
             Session::remove('__INTENDED__');
 
@@ -51,6 +51,4 @@ class Auth
     {
         return Session::destroy();
     }
-
-
 }

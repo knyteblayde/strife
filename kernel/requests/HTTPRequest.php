@@ -108,6 +108,35 @@ class HTTPRequest implements HTTPRequestInterface
 
 
     /**
+     * Append specific value to array
+     *
+     * @param $name
+     * @param $value
+     * @return string
+     */
+    public function append($name, $value)
+    {
+        return ($this->request[$name] = $value);
+    }
+
+
+    /**
+     * Append specific value to array
+     *
+     * @param $name
+     * @return mixed
+     */
+    public function remove($name)
+    {
+        if (array_key_exists($name, $this->request)) {
+            unset($this->request[$name]);
+        } else {
+            return (false);
+        }
+    }
+
+
+    /**
      * Store current field values
      * to fields session var and can be accessed thru
      * fields() method
